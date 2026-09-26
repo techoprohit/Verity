@@ -11,8 +11,20 @@
 
 Verity is designed as a lightweight, robust, self-hostable hackathon management and judging platform. It satisfies the core DOGFOOD requirement of the **One Command Rule**: running entirely offline on a developer's laptop with zero external cloud dependencies.
 
+### Technology Stack
+
+| Layer | Technology | Rationale |
+| :--- | :--- | :--- |
+| **Runtime** | Node.js v22 | Cross-platform, single-language full-stack, native `--watch` for dev |
+| **HTTP Framework** | Express.js 4.x | Minimal, proven, zero-magic routing and middleware pipeline |
+| **Database** | SQLite via `better-sqlite3` | Embedded, zero-config, WAL mode for concurrent reads, instant boot |
+| **Frontend** | Vanilla HTML / CSS / JS | No build step, no bundler, zero external CDN calls, true offline |
+| **Containerization** | Docker + Docker Compose | One-command deployment satisfying the DOGFOOD offline mandate |
+
+> **Project Design Decision:** React, Next.js, and similar SPA frameworks were intentionally avoided. They introduce build pipelines, hydration delays, and large `node_modules` footprints that conflict with the hackathon's emphasis on instant boot, offline operation, and correctness over breadth.
+
 ### Current Implementation vs. Architectural Target
-- **Current State in Repository**: The repository currently holds the event specification ([`SPEC.md`](file:///d:/Code/DogFood/Verity/SPEC.md)), the project overview ([`README.md`](file:///d:/Code/DogFood/Verity/README.md)), and this document. Source code implementation is in the setup/kickoff stage.
+- **Current State in Repository**: The project scaffold is in place: Express server ([`src/server.js`](file:///d:/Code/DogFood/Verity/src/server.js)), SQLite connection with WAL mode ([`src/db/database.js`](file:///d:/Code/DogFood/Verity/src/db/database.js)), authentication middleware ([`src/middleware/auth.js`](file:///d:/Code/DogFood/Verity/src/middleware/auth.js)), route stubs ([`src/routes/`](file:///d:/Code/DogFood/Verity/src/routes/)), Docker deployment files, and `npm install` confirmed. Schema, seeding, controllers, frontend, and tests are under active development.
 - **Architectural Scope**: This document specifies the complete system architecture, data flow, security model, and component interactions required to implement Tiers 1 through 4 cleanly within the 72-hour hackathon window.
 
 ### Major System Components
@@ -51,10 +63,12 @@ graph TD
 
 ### Component Details
 1. **Frontend**:
-   - Server-rendered HTML templates or bundled static client assets served directly by the backend HTTP server.
+   - Vanilla HTML/CSS/JS served as static assets from the `public/` directory by Express.
    - Zero external CDN dependencies (no Google Fonts, unbundled Tailwind scripts, or third-party JS). All styling and interactivity are bundled locally to guarantee offline operation.
+   - CSS-first animations and transitions (GPU-accelerated, non-blocking). No JavaScript animation libraries.
+   - Paginated gallery loading and `loading="lazy"` for media to keep pages lightweight.
 2. **Backend**:
-   - A single monolithic application service (*Project Design Decision*).
+   - A single monolithic Node.js + Express application service (*Project Design Decision*).
    - Handles route dispatch, session resolution, authorization gating, business logic (deadline enforcement, weighted scoring, normalization), and data serialization.
 3. **Database**:
    - Embedded relational database (*Project Design Decision: SQLite with Write-Ahead Logging enabled*).
@@ -498,18 +512,35 @@ A standard hackathon platform experiences a specific traffic pattern:
 
 ## 13. Known Architectural Limitations
 
-1. **Current Codebase State**:
-   - The repository currently contains architectural specifications and documentation. Concrete source code, Docker files, and API endpoints are actively in development.
-2. **Single-Node Execution**:
+1. **Single-Node Execution**:
    - Designed for single-instance deployment. Does not support distributed clustering across multiple physical nodes without a shared network database.
-3. **Ephemeral In-Memory Rate Limiting**:
+2. **Ephemeral In-Memory Rate Limiting**:
    - Rate limit counters reside in local process memory. Restarting the container clears active rate-limit buckets.
-4. **Fixed Historical Fixture Timestamps**:
+3. **Fixed Historical Fixture Timestamps**:
    - The DOGFOOD fixture data includes a static event with a cutoff in March 2026. Because deadline checks rely on the real system clock, this event remains permanently closed for testing late-submission rejection. Testing new submissions requires creating a new event record with a future cutoff date.
+4. **SQLite Write Concurrency**:
+   - SQLite allows only one concurrent writer. Under extreme concurrent write bursts (>1000 simultaneous score submissions), `SQLITE_BUSY` errors are possible. WAL mode mitigates this for typical hackathon workloads (<50 concurrent writes/sec).
 
 ---
 
-## 14. Appropriateness for 72-Hour Hackathon & Self-Hosting
+## 14. Production Migration Path
+
+> **Project Design Decision:** The architecture is intentionally designed so that every component can be swapped for a production-grade equivalent without rewriting business logic.
+
+| Layer | Hackathon (Current) | Production Upgrade | Migration Effort |
+| :--- | :--- | :--- | :--- |
+| **Database** | SQLite (embedded file) | PostgreSQL (managed or self-hosted container) | ~2-4 hours: swap `better-sqlite3` → `pg` in `src/db/database.js`, adjust `CREATE TABLE` syntax for `SERIAL` primary keys |
+| **Authentication** | Pre-seeded static session tokens | bcrypt password hashing + optional OAuth2 (Google/GitHub) | ~1 day: add registration/login routes, replace static token map with database session store |
+| **Static Assets** | Express `express.static()` | Nginx reverse proxy serving `public/` directly | ~1 hour: add Nginx container to `docker-compose.yml` |
+| **Horizontal Scaling** | Single Node.js process | Multiple Node.js instances behind a load balancer | Requires PostgreSQL migration first (shared database) |
+| **File Storage** | Local disk | S3-compatible object store (MinIO for self-hosted) | ~4 hours: abstract file writes behind a storage interface |
+| **Monitoring** | `console.log` | Structured logging (Pino) + `/health` endpoint | ~2 hours |
+
+**Why this works:** All SQL queries are isolated in `src/db/` repository files using standard SQL syntax. No SQLite-specific extensions leak into controllers or business logic. Swapping the database driver is a single-file change.
+
+---
+
+## 15. Appropriateness for 72-Hour Hackathon & Self-Hosting
 
 Verity's architecture directly serves the dual goals of the DOGFOOD hackathon:
 1. **Adoption-First Design**:
