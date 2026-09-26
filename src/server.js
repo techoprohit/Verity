@@ -9,6 +9,7 @@ const galleryRoutes = require('./routes/gallery');
 const submissionRoutes = require('./routes/submissions');
 const judgingRoutes = require('./routes/judging');
 const organizerRoutes = require('./routes/organizer');
+const toolsRoutes = require('./routes/tools');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -24,15 +25,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(authMiddleware);
 
 // Mount route controllers (order matters: specific routes before parameterized ones)
-app.use('/', submissionRoutes);    // GET /projects/my-submission, POST /projects/new
-app.use('/', galleryRoutes);       // GET /projects, GET /projects/:id
-app.use('/', judgingRoutes);       // GET/POST /api/judge/scores
-app.use('/', organizerRoutes);     // GET /api/export.csv, GET /api/dashboard
+app.use('/', toolsRoutes);          // GET /api/certificates, GET /embed/gallery, GET /api/backup/export
+app.use('/', submissionRoutes);     // GET /projects/my-submission, POST /projects/new
+app.use('/', galleryRoutes);        // GET /projects, GET /projects/:id
+app.use('/', judgingRoutes);        // GET/POST /api/judge/scores
+app.use('/', organizerRoutes);      // GET /api/export.csv, GET /api/dashboard
 
 // SPA catch-all: serve index.html for client-side routes only (not API or file requests)
 app.get('*', (req, res) => {
-    // Skip if it looks like an API call or a file request
-    if (req.path.startsWith('/projects') || req.path.startsWith('/api') || req.path.includes('.')) {
+    // Skip if it looks like an API call, widget embed, or a file request
+    if (req.path.startsWith('/projects') || req.path.startsWith('/api') || req.path.startsWith('/embed') || req.path.includes('.')) {
         return res.status(404).json({ error: 'Not found' });
     }
     res.sendFile(path.join(__dirname, 'public', 'index.html'));

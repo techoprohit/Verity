@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VERITY // DOGFOOD 2026</title>
-    <meta name="description" content="Verity - High precision judging engine and submission platform for hackathons.">
-    <!-- Fallback fonts in case external ones can't load, though DESIGN.md says system fonts only -->
-    <link rel="stylesheet" href="/css/style.css?v=6">
-    <link rel="stylesheet" href="/css/components.css?v=6">
-    
-    <!-- We will inject view-specific styles dynamically if needed, but style.css is global -->
+    <meta name="description" content="Verity - High-precision judging engine and hackathon platform engineered to the Hackathon Raptors visual specification.">
+    <!-- Local styles (100% offline self-contained) -->
+    <link rel="stylesheet" href="/css/style.css?v=9">
+    <link rel="stylesheet" href="/css/components.css?v=9">
 </head>
 <body>
     <!-- Top Navigation Bar -->
@@ -19,23 +17,41 @@
         </a>
         
         <div class="df-nav__links">
-            <span class="df-status-dot"></span> <span class="df-tag" style="margin-right: var(--sp-4);">SYS READY</span>
-            <a href="/" data-link>Gallery</a>
-            <a href="/submit" data-link>Submit</a>
-            <a href="/judge" data-link>Judge Portal</a>
-            <a href="/console" data-link>Console</a>
+            <div style="display: flex; align-items: center; margin-right: var(--sp-2);">
+                <span class="df-status-dot"></span>
+                <span class="df-tag" style="color: var(--brand-lime);">LIVE</span>
+            </div>
+            <a href="/" data-link><span class="nav-idx">01</span> Gallery</a>
+            <a href="/submit" data-link><span class="nav-idx">02</span> Submit</a>
+            <a href="/judge" data-link><span class="nav-idx">03</span> Judge</a>
+            <a href="/console" data-link><span class="nav-idx">04</span> Console</a>
+            <a href="/tools" data-link><span class="nav-idx">05</span> Tools</a>
         </div>
 
-        <div class="df-nav__persona" id="session-trigger">
-            <span class="df-tag" id="current-role-badge">ROLE: VISITOR</span>
+        <div style="display: flex; align-items: center; gap: var(--sp-4);">
+            <button id="theme-toggle-btn" class="btn-theme-toggle" title="Toggle Light/Dark Theme">
+                <span id="theme-icon">🌙</span> <span id="theme-text">DARK</span>
+            </button>
+            <div class="df-nav__persona" id="session-trigger" title="Manage active testing persona">
+                <span class="df-tag" id="current-role-badge">ROLE: VISITOR</span>
+            </div>
         </div>
     </nav>
+
+    <!-- Global Ticker / Marquee Strip -->
+    <div class="df-ticker-strip">
+        <span><span class="highlight">DOGFOOD 2026</span> // HACKATHON RAPTORS JUDGING PLATFORM</span>
+        <span>● <span class="highlight">INTEGRITY:</span> BACKEND ROLE ISOLATED</span>
+        <span>● <span class="highlight">NORMALIZATION:</span> Z-SCORE CALIBRATED</span>
+        <span>● <span class="highlight">DEPLOYMENT:</span> 100% OFFLINE STANDALONE</span>
+        <span>● <span class="highlight">VERSION:</span> v1.0.0 RELEASE</span>
+    </div>
 
     <!-- Persona Switcher Drawer (Hidden by default) -->
     <div id="persona-drawer" class="df-persona-drawer" style="display: none;">
         <div class="df-persona-drawer__header">
             <h4>Session Manager</h4>
-            <button id="close-persona" class="btn-secondary">CLOSE</button>
+            <button id="close-persona" class="btn-secondary" style="height: 28px; padding: 0 8px; font-size: 10px;">[ CLOSE ]</button>
         </div>
         <div class="df-persona-drawer__content">
             <p class="text-small text-muted">Override active cookie for testing role boundaries.</p>
@@ -57,33 +73,33 @@
 
     <!-- Footer -->
     <footer class="df-footer">
-        <div><span class="df-tag">VERITY KERNEL v1.0.0</span></div>
-        <div><span class="df-tag" style="color: var(--color-success)">VERIFIED OFFLINE</span></div>
+        <div><span class="df-tag">VERITY KERNEL v1.0.0</span> <span class="text-muted" style="margin-left: 8px;">// DOGFOOD 2026 SPEC</span></div>
+        <div><span class="df-tag" style="color: var(--brand-lime);">VERIFIED OFFLINE</span></div>
     </footer>
 
     <!-- Global App Logic & Router -->
-    <script type="module" src="/js/app.js?v=6"></script>
+    <script type="module" src="/js/app.js?v=9"></script>
 
     <style>
-        /* Drawer Styles (kept here or moved to style.css) */
+        /* Drawer Styles */
         .df-persona-drawer {
             position: fixed;
-            top: 50px;
+            top: 56px;
             right: 0;
             width: 320px;
             background-color: var(--surface-raised);
-            border-left: var(--border-hairline);
-            border-bottom: var(--border-hairline);
+            border-left: 1px solid var(--border-default);
+            border-bottom: 1px solid var(--border-default);
             z-index: 200;
             padding: var(--sp-4);
-            box-shadow: -4px 4px 15px rgba(0,0,0,0.5);
+            box-shadow: -4px 6px 20px rgba(0,0,0,0.7);
         }
         .df-persona-drawer__header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: var(--sp-4);
-            border-bottom: var(--border-hairline);
+            border-bottom: 1px solid var(--border-subtle);
             padding-bottom: var(--sp-2);
         }
         .df-persona-drawer__content {
