@@ -100,4 +100,52 @@ router.post('/projects/new', (req, res) => {
     }
 });
 
+// GET /projects/my-submission — Fetch user's team, project draft, and event deadline
+router.get('/projects/my-submission', (req, res) => {
+    if (!req.user || req.user.role !== 'participant') {
+        return res.status(403).json({ error: 'Forbidden: Requires participant role' });
+    }
+
+    try {
+        const event = db.prepare(`SELECT * FROM events LIMIT 1`).get();
+        if (!event) return res.status(400).json({ error: 'No active event found' });
+
+        const now = new Date().toISOString();
+        const isClosed = now > event.submissions_close;
+
+        // Get team and membership
+        const teamInfo = db.prepare(`
+            SELECT t.id, t.name, t.invite_code 
+            FROM teams t
+            JOIN team_members tm ON t.id = tm.team_id
+            WHERE tm.user_id = ?
+        `).get(req.user.id);
+
+        if (!teamInfo) {
+            return res.json({ event, isClosed, hasTeam: false });
+        }
+
+        // Get existing project
+        const project = db.prepare(`
+            SELECT * FROM projects WHERE team_id = ? AND event_id = ?
+        `).get(teamInfo.id, event.id);
+
+        // Get tracks
+        const tracks = db.prepare(`SELECT id, name FROM tracks ORDER BY name`).all();
+
+        res.json({
+            event,
+            isClosed,
+            hasTeam: true,
+            team: teamInfo,
+            project: project || null,
+            tracks: tracks
+        });
+
+    } catch (err) {
+        console.error('[submissions get] Error:', err.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 module.exports = router;

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VERITY // DOGFOOD 2026</title>
+    <meta name="description" content="Verity - High precision judging engine and submission platform for hackathons.">
+    <!-- Fallback fonts in case external ones can't load, though DESIGN.md says system fonts only -->
+    <link rel="stylesheet" href="/css/style.css?v=6">
+    <link rel="stylesheet" href="/css/components.css?v=6">
+    
+    <!-- We will inject view-specific styles dynamically if needed, but style.css is global -->
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="df-navbar">
+        <a href="/" class="df-nav__brand" data-link>
+            VERITY <span>// [DF-2026]</span>
+        </a>
+        
+        <div class="df-nav__links">
+            <span class="df-status-dot"></span> <span class="df-tag" style="margin-right: var(--sp-4);">SYS READY</span>
+            <a href="/" data-link>Gallery</a>
+            <a href="/submit" data-link>Submit</a>
+            <a href="/judge" data-link>Judge Portal</a>
+            <a href="/console" data-link>Console</a>
+        </div>
+
+        <div class="df-nav__persona" id="session-trigger">
+            <span class="df-tag" id="current-role-badge">ROLE: VISITOR</span>
+        </div>
+    </nav>
+
+    <!-- Persona Switcher Drawer (Hidden by default) -->
+    <div id="persona-drawer" class="df-persona-drawer" style="display: none;">
+        <div class="df-persona-drawer__header">
+            <h4>Session Manager</h4>
+            <button id="close-persona" class="btn-secondary">CLOSE</button>
+        </div>
+        <div class="df-persona-drawer__content">
+            <p class="text-small text-muted">Override active cookie for testing role boundaries.</p>
+            <button class="btn-secondary df-role-btn" data-role="org_7f2a">[ ACT AS: ORGANIZER ]</button>
+            <button class="btn-secondary df-role-btn" data-role="jdg_a_91bc">[ ACT AS: JUDGE A (Ada) ]</button>
+            <button class="btn-secondary df-role-btn" data-role="jdg_b_44de">[ ACT AS: JUDGE B (Peer) ]</button>
+            <button class="btn-secondary df-role-btn" data-role="prt_2e88">[ ACT AS: PARTICIPANT ]</button>
+            <button class="btn-danger df-role-btn" data-role="visitor">[ ACT AS: PUBLIC GUEST ]</button>
+        </div>
+    </div>
+
+    <!-- Main Application Canvas -->
+    <main class="df-container" id="app-root">
+        <!-- SPA Views will be rendered here by app.js -->
+        <div style="padding: var(--sp-12); text-align: center;">
+            <span class="df-tag">[ INITIALIZING TERMINAL... ]</span>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="df-footer">
+        <div><span class="df-tag">VERITY KERNEL v1.0.0</span></div>
+        <div><span class="df-tag" style="color: var(--color-success)">VERIFIED OFFLINE</span></div>
+    </footer>
+
+    <!-- Global App Logic & Router -->
+    <script type="module" src="/js/app.js?v=6"></script>
+
+    <style>
+        /* Drawer Styles (kept here or moved to style.css) */
+        .df-persona-drawer {
+            position: fixed;
+            top: 50px;
+            right: 0;
+            width: 320px;
+            background-color: var(--surface-raised);
+            border-left: var(--border-hairline);
+            border-bottom: var(--border-hairline);
+            z-index: 200;
+            padding: var(--sp-4);
+            box-shadow: -4px 4px 15px rgba(0,0,0,0.5);
+        }
+        .df-persona-drawer__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--sp-4);
+            border-bottom: var(--border-hairline);
+            padding-bottom: var(--sp-2);
+        }
+        .df-persona-drawer__content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--sp-2);
+        }
+        .df-role-btn {
+            width: 100%;
+            justify-content: flex-start;
+        }
+    </style>
+</body>
+</html>
