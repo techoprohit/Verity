@@ -40,7 +40,7 @@ export async function initJudge() {
                 <div class="df-card" style="border-color: var(--color-error)">
                     <div class="df-card__body">
                         <h3 style="color: var(--color-error)">[ HTTP 403: JUDGING ACCESS RESTRICTED ]</h3>
-                        <p>Only verified users with the <strong style="color: var(--brand-cyan)">JUDGE</strong> or <strong style="color: var(--brand-cyan)">ORGANIZER</strong> role may enter the judging console.</p>
+                        <p>Only verified users with the <strong style="color: var(--brand-accent)">JUDGE</strong> or <strong style="color: var(--brand-accent)">ORGANIZER</strong> role may enter the judging console.</p>
                         <p class="text-muted" style="margin-top: var(--sp-4);">To protect evaluation impartiality, participants and unauthenticated visitors cannot inspect rubrics or evaluate entries.</p>
                         <div style="margin-top: var(--sp-6); display: flex; gap: var(--sp-3); flex-wrap: wrap;">
                             <button class="btn-primary" id="switch-to-judge-a">[ ACT AS: JUDGE A (Ada Okonkwo) ]</button>
@@ -188,7 +188,7 @@ export async function initJudge() {
                     <form id="evaluation-form" class="df-card">
                         <div class="df-card__header">
                             <span class="df-tag">[ WEIGHTED RUBRIC SCORECARD ]</span>
-                            <span class="df-tag" style="color: var(--brand-cyan);">T2 CERTIFIED</span>
+                            <span class="df-tag" style="color: var(--brand-accent);">T2 CERTIFIED</span>
                         </div>
                         <div class="df-card__body" style="display: flex; flex-direction: column; gap: var(--sp-4);">
                             <!-- Criterion 1: Functionality -->
@@ -233,7 +233,7 @@ export async function initJudge() {
                             <!-- Live Score Meter -->
                             <div class="df-score-meter">
                                 <span class="df-tag">COMPOSITE RAW SCORE:</span>
-                                <span style="font-family: var(--font-display); font-size: 20px; font-weight: 800; color: var(--brand-cyan);" id="live-composite-score">
+                                <span style="font-family: var(--font-display); font-size: 20px; font-weight: 800; color: var(--brand-accent);" id="live-composite-score">
                                     ${liveComposite} <span style="font-size: 13px; color: var(--text-muted); font-family: var(--font-mono);">/ 5.00</span>
                                 </span>
                             </div>

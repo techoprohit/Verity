@@ -31,6 +31,7 @@ app.use('/', authRoutes);          // POST /api/auth/login, POST /api/auth/logou
 app.use('/', eventsRoutes);        // POST /api/events, POST /api/tracks, POST /api/prizes
 app.use('/', teamsRoutes);         // POST /api/teams, POST /api/teams/join
 app.use('/', galleryRoutes);       // GET /projects, GET /projects/:id
+app.use('/', submissionRoutes);    // GET/POST /projects/new, /projects/my-submission
 app.use('/', judgingRoutes);       // GET/POST /api/judge/scores
 app.use('/', organizerRoutes);     // GET /api/export.csv, GET /api/dashboard
 

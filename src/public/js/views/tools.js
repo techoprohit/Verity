@@ -15,7 +15,7 @@ export async function renderTools() {
                 </div>
             </div>
             <div>
-                <span class="df-tag" style="color: var(--brand-lime);">[ T4 CAPABILITIES ACTIVE ]</span>
+                <span class="df-tag" style="color: var(--color-success);">[ T4 CAPABILITIES ACTIVE ]</span>
             </div>
         </div>
 
@@ -108,12 +108,12 @@ export async function initTools() {
                 const cert = await res.json();
 
                 output.innerHTML = `
-                    <div class="df-card" id="cert-card" style="border: 2px solid var(--brand-cyan); background: linear-gradient(135deg, #0B1020 0%, #131C36 100%); padding: var(--sp-8); position: relative; overflow: hidden;">
+                    <div class="df-card" id="cert-card" style="border: 2px solid var(--brand-accent); background: linear-gradient(135deg, #0B1020 0%, #131C36 100%); padding: var(--sp-8); position: relative; overflow: hidden;">
                         <div style="position: absolute; top: -30px; right: -30px; width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, rgba(0,229,208,0.15) 0%, transparent 70%);"></div>
                         
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border-strong); padding-bottom: var(--sp-4); margin-bottom: var(--sp-6);">
                             <div>
-                                <span class="df-tag" style="color: var(--brand-cyan);">VERITY ACCREDITATION AUTHORITY</span>
+                                <span class="df-tag" style="color: var(--brand-accent);">VERITY ACCREDITATION AUTHORITY</span>
                                 <h2 style="font-size: 26px; margin-top: 8px; letter-spacing: 0.05em;">CERTIFICATE OF PARTICIPATION</h2>
                                 <span class="text-small text-muted">EVENT: ${escapeHtml(cert.eventName)} (${escapeHtml(cert.eventId)})</span>
                             </div>
@@ -139,7 +139,7 @@ export async function initTools() {
 
                         <div style="border-top: 1px solid var(--border-strong); padding-top: var(--sp-6); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--sp-4);">
                             <div>
-                                <span class="df-tag" style="color: var(--brand-cyan);">HMAC-SHA256 AUTHENTICITY SEAL</span>
+                                <span class="df-tag" style="color: var(--brand-accent);">HMAC-SHA256 AUTHENTICITY SEAL</span>
                                 <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); word-break: break-all; max-width: 480px; margin-top: 4px;">
                                     ${cert.signature}
                                 </div>
@@ -200,7 +200,7 @@ export async function initTools() {
             <div class="df-card" style="margin-bottom: var(--sp-6);">
                 <div class="df-card__header">
                     <span class="df-tag">[ EMBEDDABLE GALLERY WIDGET GENERATOR ]</span>
-                    <span class="df-tag" style="color: var(--brand-cyan)">STANDALONE IFRAME</span>
+                    <span class="df-tag" style="color: var(--brand-accent)">STANDALONE IFRAME</span>
                 </div>
                 <div class="df-card__body">
                     <p class="text-muted">Generate a zero-dependency, self-contained interactive project gallery widget designed to embed in external event landing pages, Discord bots, or partner websites.</p>
@@ -288,7 +288,7 @@ export async function initTools() {
                     <div class="df-card">
                         <div class="df-card__header" style="display: flex; justify-content: space-between; align-items: center;">
                             <div style="display: flex; align-items: center; gap: var(--sp-3);">
-                                <span class="df-tag" style="background: var(--surface-raised); color: ${ep.method === 'GET' ? 'var(--brand-cyan)' : 'var(--brand-pink)'}; font-weight: 800;">
+                                <span class="df-tag" style="background: var(--surface-raised); color: ${ep.method === 'GET' ? 'var(--brand-accent)' : 'var(--brand-pink)'}; font-weight: 800;">
                                     ${ep.method}
                                 </span>
                                 <code style="color: var(--text-primary); font-size: 13px;">${ep.path}</code>
@@ -392,7 +392,7 @@ export async function initTools() {
                     </div>
 
                     <div style="background: var(--surface-raised); border: 1px solid var(--border-subtle); padding: var(--sp-4); border-radius: var(--radius-sm); font-size: 12px;">
-                        <span class="df-tag" style="color: var(--brand-cyan);">INCLUDED DATA STRUCTURES:</span>
+                        <span class="df-tag" style="color: var(--brand-accent);">INCLUDED DATA STRUCTURES:</span>
                         <ul style="margin: var(--sp-2) 0 0 var(--sp-6); color: var(--text-secondary); line-height: 1.6;">
                             <li>Event Configuration & Submissions Cutoff metadata</li>
                             <li>Registered Competition Tracks & Descriptions</li>

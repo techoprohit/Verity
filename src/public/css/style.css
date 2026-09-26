@@ -1,41 +1,40 @@
 /* Verity Design System — High Readability Editorial & Engineering System */
 
 :root {
-  /* Colors - Base Surfaces (Dark Theme - Default) */
-  --bg-void: #0B0F17;
-  --surface-base: #141B28;
-  --surface-raised: #1C2638;
-  --surface-hover: #233148;
+  /* Colors - Base Surfaces (raptors.dev palette) */
+  --bg-void: #12181A;
+  --surface-base: #181E20;
+  --surface-raised: #1F2426;
+  --surface-hover: #262E32;
+  --menu-bg: rgba(31, 36, 38, 0.90);
 
-  /* Colors - Brand & Accent */
-  --brand-lime: #22C55E;
-  --brand-lime-hover: #16A34A;
-  --brand-accent: #22C55E;
-  --brand-cyan: #22C55E;
-  --brand-pink: #22C55E;
+  /* Colors - Accents */
+  --brand-primary: #FFFFFF;
+  --brand-secondary: #F8F9F9;
+  --brand-accent: #3898EC;
 
-  /* Colors - High Readability Typography */
+  /* Colors - Typography */
   --text-primary: #FFFFFF;
-  --text-secondary: #CBD5E1;
-  --text-muted: #94A3B8;
-  --text-dim: #64748B;
+  --text-secondary: #A0AAB0;
+  --text-muted: #626E74;
+  --text-dim: #384348;
 
-  /* Colors - Crisp Visible Borders */
-  --border-subtle: #1E293B;
-  --border-default: #334155;
-  --border-strong: #475569;
-  --border-accent: #22C55E;
+  /* Colors - Borders */
+  --border-subtle: #22292C;
+  --border-default: #2D363A;
+  --border-strong: #424D52;
+  --border-accent: #3898EC;
 
   /* Colors - Semantics */
-  --color-success: #22C55E;
-  --color-warning: #F59E0B;
-  --color-error: #EF4444;
-  --color-info: #38BDF8;
+  --color-success: #3DD68C;
+  --color-warning: #FFB84D;
+  --color-error: #EA384C;
+  --color-info: #3898EC;
 
-  /* Typography Stacks (Sans-serif for UI readability, Monospace for code/tags) */
-  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+  /* Typography Stacks */
+  --font-display: 'Helvetica', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Fira Code', 'SF Mono', 'Segoe UI Mono', monospace;
+  --font-serif: 'Playfair Display', Georgia, serif;
 
   /* Spacing */
   --sp-1: 4px;
@@ -52,41 +51,9 @@
   --radius-none: 0px;
   --radius-sm: 4px;
   --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-pill: 30px;
   --border-hairline: 1px solid var(--border-default);
-  --border-active: 1px solid var(--brand-lime);
-  --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
-
-/* Light Theme (For users who prefer daytime / paper contrast) */
-[data-theme="light"] {
-  --bg-void: #F8FAFC;
-  --surface-base: #FFFFFF;
-  --surface-raised: #F1F5F9;
-  --surface-hover: #E2E8F0;
-
-  --brand-lime: #16A34A;
-  --brand-lime-hover: #15803D;
-  --brand-accent: #16A34A;
-  --brand-cyan: #16A34A;
-  --brand-pink: #16A34A;
-
-  --text-primary: #0F172A;
-  --text-secondary: #334155;
-  --text-muted: #64748B;
-  --text-dim: #94A3B8;
-
-  --border-subtle: #E2E8F0;
-  --border-default: #CBD5E1;
-  --border-strong: #94A3B8;
-  --border-accent: #16A34A;
-
-  --color-success: #16A34A;
-  --color-warning: #D97706;
-  --color-error: #DC2626;
-  --color-info: #0284C7;
-
-  --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  --border-active: 1px solid var(--brand-accent);
 }
 
 /* Reset & Global Canvas */
@@ -99,7 +66,7 @@
 body {
   background-color: var(--bg-void);
   color: var(--text-secondary);
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -138,7 +105,7 @@ h3 {
 }
 
 h4 {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 15px;
   font-weight: 700;
   line-height: 1.4;
@@ -163,7 +130,7 @@ p {
   font-size: 42px;
   font-weight: 900;
   line-height: 1;
-  color: var(--brand-lime);
+  color: var(--color-success);
   margin-right: var(--sp-4);
   letter-spacing: -0.03em;
   user-select: none;
@@ -186,7 +153,7 @@ p {
   display: inline-block;
   width: 9px;
   height: 9px;
-  background-color: var(--brand-lime);
+  background-color: var(--color-success);
   border-radius: 50%;
   margin-right: var(--sp-2);
   vertical-align: middle;
@@ -203,17 +170,22 @@ p {
 
 /* Layout Architecture */
 .df-navbar {
-  height: 60px;
-  background-color: var(--surface-base);
-  border-bottom: 1px solid var(--border-default);
+  height: 46px;
+  background-color: var(--menu-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--sp-6);
   position: sticky;
-  top: 0;
+  top: var(--sp-4);
+  margin: var(--sp-4) auto;
+  max-width: 1360px;
   z-index: 100;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 .df-nav__brand {
@@ -231,7 +203,7 @@ p {
 .df-nav__brand span {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--brand-lime);
+  color: var(--color-success);
   font-weight: 600;
 }
 
@@ -256,7 +228,7 @@ p {
 }
 
 .df-nav__links a span.nav-idx {
-  color: var(--brand-lime);
+  color: var(--brand-accent);
   font-size: 11px;
   font-weight: 700;
   font-family: var(--font-mono);
@@ -267,8 +239,8 @@ p {
 }
 
 .df-nav__links a.active {
-  color: var(--brand-lime);
-  border-bottom: 2px solid var(--brand-lime);
+  color: var(--brand-primary);
+  border-bottom: 2px solid var(--brand-accent);
 }
 
 .df-nav__persona {
@@ -279,7 +251,7 @@ p {
   gap: var(--sp-3);
 }
 .df-nav__persona:hover .df-tag {
-  color: var(--brand-lime);
+  color: var(--brand-accent);
 }
 
 /* Theme Toggle Button */
@@ -299,8 +271,8 @@ p {
   transition: all 120ms linear;
 }
 .btn-theme-toggle:hover {
-  border-color: var(--brand-lime);
-  color: var(--brand-lime);
+  border-color: var(--color-success);
+  color: var(--color-success);
 }
 
 /* Container */
@@ -324,7 +296,7 @@ p {
 
 /* Base Primitives (Buttons) */
 .btn-primary, .btn-secondary, .btn-danger {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -342,14 +314,14 @@ p {
 }
 
 .btn-primary {
-  background-color: var(--brand-lime);
+  background-color: var(--color-success);
   color: #0B0F17;
-  border: 1px solid var(--brand-lime);
+  border: 1px solid var(--color-success);
   box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
 }
 .btn-primary:hover {
-  background-color: var(--brand-lime-hover);
-  border-color: var(--brand-lime-hover);
+  background-color: var(--color-success);
+  border-color: var(--color-success);
   color: #FFFFFF;
   box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
 }
@@ -360,8 +332,8 @@ p {
   border: 1px solid var(--border-default);
 }
 .btn-secondary:hover {
-  border-color: var(--brand-lime);
-  color: var(--brand-lime);
+  border-color: var(--color-success);
+  color: var(--color-success);
   background-color: var(--surface-raised);
 }
 
@@ -391,13 +363,13 @@ p {
 }
 
 .df-ticker-strip span.highlight {
-  color: var(--brand-lime);
+  color: var(--color-success);
   font-weight: 700;
 }
 
 /* Accessibility */
 :focus {
-  outline: 2px solid var(--brand-lime);
+  outline: 2px solid var(--color-success);
   outline-offset: 2px;
 }
 

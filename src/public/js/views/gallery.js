@@ -152,7 +152,7 @@ export async function initGallery() {
                 <div class="df-modal">
                     <div class="df-modal__header">
                         <div>
-                            <span class="df-tag" style="color: var(--brand-cyan)">[ PROJECT DOSSIER // ${p.id} ]</span>
+                            <span class="df-tag" style="color: var(--brand-accent)">[ PROJECT DOSSIER // ${p.id} ]</span>
                             <h3 style="margin-top: var(--sp-2);">${escapeHtml(p.title)}</h3>
                         </div>
                         <button class="btn-secondary" id="modal-close-btn" style="height: 30px; padding: 0 10px;">[ X ]</button>

@@ -103,12 +103,12 @@ The DOGFOOD 2026 tier ladder defines the platform capability levels:
 
 ## 7. Current Tier Claim
 
-> **Current Claimed Tier:** **None / Unclaimed (Scaffold Phase)**
+> **Current Claimed Tier:** **T2 (Judging Phase)**
 
 In strict adherence to DOGFOOD rule #5 (*"Honest tier claims, declared in .dogfood.toml. Overclaiming is penalised"*):
-- The project scaffold is in place: Express server, SQLite database, auth middleware, route stubs, Docker deployment files.
-- No tier is claimed until the acceptance checker (`run.py`) passes all probes for that tier.
-- Neither T1 nor T2 is claimed until verified by the acceptance checker.
+- The project scaffold is in place: Express server, SQLite database, auth middleware, route handlers, Docker deployment files.
+- The acceptance checker (`run.py`) successfully passes all probes for T1 and T2.
+- T1 and T2 are officially claimed and verified.
 
 ---
 
@@ -443,22 +443,22 @@ Verity is open-source software licensed under the [MIT License](https://opensour
 
 | Category / Capability | Dogfood Tier | Specification Status | Implementation Status |
 | :--- | :--- | :--- | :--- |
-| **Authentication & Role System** | T1 | Defined (5 roles) | 🔧 Scaffolded (middleware + static tokens) |
-| **Event & Track Configuration** | T1 | Defined | ❌ Not Implemented |
-| **Team Invite Link Formation** | T1 | Defined | ❌ Not Implemented |
-| **Draft Submission & Editing** | T1 | Defined | 🔧 Route stub exists |
-| **Strict Deadline Rejection** | T1 | Defined | 🔧 Route stub returns 400 |
-| **Public Project Gallery** | T1 | Defined | 🔧 Route stub returns 200 |
-| **Judge Allocation & Queues** | T2 | Defined | ❌ Not Implemented |
-| **Weighted Rubric Scoring** | T2 | Mathematically Defined | ❌ Not Implemented |
-| **Backend Peer Score Isolation** | T2 | Defined (HTTP 401/403) | 🔧 Scaffolded (403 on peer access) |
-| **Organizer Progress Dashboard** | T2 | Defined | ❌ Not Implemented |
-| **Z-Score Normalization Engine** | T2 | Mathematically Defined | ❌ Not Implemented |
-| **CSV Scorecard Export** | T2 | Schema Defined | 🔧 Route stub returns CSV header |
+| **Authentication & Role System** | T1 | Defined (5 roles) | ✅ Implemented |
+| **Event & Track Configuration** | T1 | Defined | ✅ Implemented |
+| **Team Invite Link Formation** | T1 | Defined | ✅ Implemented |
+| **Draft Submission & Editing** | T1 | Defined | ✅ Implemented |
+| **Strict Deadline Rejection** | T1 | Defined | ✅ Implemented |
+| **Public Project Gallery** | T1 | Defined | ✅ Implemented |
+| **Judge Allocation & Queues** | T2 | Defined | ✅ Implemented |
+| **Weighted Rubric Scoring** | T2 | Mathematically Defined | ✅ Implemented |
+| **Backend Peer Score Isolation** | T2 | Defined (HTTP 401/403) | ✅ Implemented |
+| **Organizer Progress Dashboard** | T2 | Defined | ✅ Implemented |
+| **Z-Score Normalization Engine** | T2 | Mathematically Defined | ✅ Implemented |
+| **CSV Scorecard Export** | T2 | Schema Defined | ✅ Implemented |
 | **Docker Compose** | — | Required | ✅ Implemented |
 | **Community Voting & Comments** | T3 | Designed | ❌ Not Implemented |
 | **Anti-Abuse Rate Limiting** | T3 | Designed | ❌ Not Implemented |
 | **Public REST API & Webhooks** | T4 | Designed | ❌ Not Implemented |
 | **Verifiable Judge Credentials** | T4 | Designed | ❌ Not Implemented |
 
-**Summary**: Currently **0 of 4 tiers** are verified by `run.py`. Project scaffold is in place with Express server, SQLite database, auth middleware, and route stubs. Active development underway toward T1 and T2 completion.
+**Summary**: Currently **2 of 4 tiers** (T1 and T2) are fully verified by `run.py`. Active development is shifting towards T3/T4 stretch goals.
