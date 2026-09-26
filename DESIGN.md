@@ -3,7 +3,7 @@
 > **Event Context**: DOGFOOD 2026 Hackathon  
 > **Tagline**: "Build the platform that will judge you."  
 > **Repository**: [`techoprohit/Verity`](https://github.com/techoprohit/Verity)  
-> **Visual Reference**: [https://dogfoodhack.com/](https://dogfoodhack.com/)  
+> **Visual Reference**: [https://www.raptors.dev/](https://www.raptors.dev/)  
 > **Document Status**: Complete Implementation-Ready Design Specification
 
 ---
@@ -11,20 +11,20 @@
 ## 01. Design Overview
 
 ### Purpose of the Design System
-This document establishes the canonical visual identity, design tokens, component anatomy, layout hierarchy, and interaction mechanics for **Verity**. Verity is an open-source, self-hostable hackathon submission and judging platform engineered under the DOGFOOD 2026 challenge. The design system translates the rigorous mathematical and security requirements of [`SPEC.md`](file:///d:/Code/DogFood/Verity/SPEC.md) into an authoritative, dense, and technically transparent user interface.
+This document establishes the canonical visual identity, design tokens, component anatomy, layout hierarchy, and interaction mechanics for **Verity**. Verity is an open-source, self-hostable hackathon submission and judging platform engineered under the DOGFOOD 2026 challenge. The design system translates the rigorous mathematical and security requirements of [`SPEC.md`](file:///d:/Code/DogFood/Verity/SPEC.md) into an authoritative, editorial, and technically transparent user interface — visually anchored to the engineering guild identity of Hackathon Raptors.
 
-### Product Visual Direction: Technical Industrialism & Editorial Restraint
-Verity avoids generic corporate SaaS tropes—there are no pastel blob gradients, oversized cartoonish corner radii, or artificial whitespace padding. Instead, the interface adopts a **Technical Industrial Aesthetic** directly inspired by the official DOGFOOD visual language:
-- **Atmospheric Palette**: Deep obsidian and navy base surfaces (`#0B1020`, `#0E1428`) punctuated by laser-sharp neon cyan (`#00E5D0`) and hot magenta/coral (`#FF3D6E`) accents.
-- **Architectural Framing**: Crisp 1px hairline borders (`#1B2540`, `#26355C`) defining strict data cells and modular panels.
-- **Typographic Rigor**: High-contrast geometric grotesque headings paired with uncompromising monospace data grids and terminal-inspired bracketed metadata (`[ STATUS / LOCKED ]`).
+### Product Visual Direction: Editorial Boldness & Engineering Guild Aesthetic
+Verity avoids generic corporate SaaS tropes—there are no pastel blob gradients, oversized cartoonish corner radii, or artificial whitespace padding. Instead, the interface adopts a **Bold Editorial Engineering Aesthetic** directly inspired by the Hackathon Raptors visual language:
+- **Atmospheric Palette**: Deep charcoal and near-black base surfaces (`#0D0D0D`, `#111111`) punctuated by sharp lime/acid-green (`#B8FF57`) primary accents and clean off-white (`#F0F0EC`) text.
+- **Architectural Framing**: Strong typographic hierarchy using oversized numbered section labels (`01`, `02`, `03`) and clean hairline rules (`#1F1F1F`, `#2A2A2A`) defining modular content zones.
+- **Typographic Rigor**: High-contrast editorial grotesque headings (large, bold, mixed-case) paired with structured monospace data grids and concise label metadata (`[ STATUS / LOCKED ]`).
 - **Functional Density**: Prioritizing information legibility and rapid keyboard/mouse evaluation for judges reviewing dozens of projects and organizers managing high-stakes live deliberations.
 
 ### Relationship Between Design Decisions and DOGFOOD Requirements
 Every visual choice reinforces core DOGFOOD platform mandates:
 1. **The Backend Security Rule**: Visual access states (e.g., hidden scorecards, locked submission inputs) strictly reflect backend authority. Forbidden routes render austere, explicit terminal security warnings rather than ambiguous blank screens.
 2. **Judging Integrity**: Weighted rubrics and normalized standing calculations are displayed with absolute clarity, highlighting criterion weight multipliers ($w_i$), raw scores, and calibrated Z-scores side-by-side.
-3. **The 100% Offline Rule**: The design system relies exclusively on self-hostable, localizable fonts and CSS primitives, requiring zero third-party CDNs, external webfont requests, or hosted icon libraries.
+3. **The 100% Offline Rule**: The design system relies exclusively on self-hostable, localizable fonts and CSS primitives, requiring zero third-party CDNs, external webfont requests, or hosted icon libraries. Visual alignment with `raptors.dev` is achieved through design token mirroring, not asset embedding.
 
 ---
 
@@ -67,8 +67,8 @@ The interface strictly supports the five documented roles without addition:
    The UI never masks or synthesizes state. If an event is closed, the UI communicates the server timestamp cutoff clearly. If a peer score is probed, the UI surfaces the authoritative HTTP 403 response.
 3. **High-Density Utility**  
    Hackathon organizers and judges evaluate high volumes of dense data under tight deadlines. Tables, rubric matrices, and project queues prioritize tight vertical rhythm and scannable tabular alignment.
-4. **Terminal Precision and Industrial Polish**  
-   Drawing from `dogfoodhack.com`, borders, labels, and metadata use monospace bracketed tags (`[ TRACK / DEV-TOOLS ]`), crisp geometric lines, and deliberate contrast to evoke an industrial computing terminal.
+4. **Editorial Boldness and Guild Polish**  
+   Drawing from `raptors.dev`, section headers use oversized numbered labels (`01`, `02`, `03`), sharp lime-green accents, and deliberate large-scale contrast to evoke an elite engineering guild directory rather than a generic platform.
 5. **Universal Offline Usability**  
    Every font, icon, style, and component must render flawlessly on a laptop operating completely disconnected from the internet.
 6. **Zero-Ambiguity Feedback**  
@@ -78,68 +78,69 @@ The interface strictly supports the five documented roles without addition:
 
 ## 04. Brand and Visual Identity
 
-### Visual Personality: The "Verity Terminal"
-Verity’s visual identity communicates impartiality, structural precision, and transparency. It treats the hackathon platform not as a promotional marketing page, but as a high-precision judging instrument.
+### Visual Personality: The "Verity Guild"
+Verity’s visual identity communicates community authority, engineering excellence, and transparent meritocracy. It treats the hackathon platform not as a sterile judging tool, but as a prestigious guild directory where talent is celebrated and evaluated with integrity.
 
 ### Visual Motifs & Art Direction:
-- **Structural Gridlines**: Section boundaries are anchored with `1px solid #1B2540` hairline dividers and subtle accent borders (`#00E5D0`, `#FF3D6E`).
-- **Bracketed Monospace Tags**: System states, role badges, and track metadata are encased in bracketed typographic enclosures: `[ ROLE: JUDGE ]`, `[ STATUS: LOCKED ]`.
-- **Status Indicators**: Monospace blinking or pulsing hardware-style dots indicating live status (`● SYS READY`, `● CLOSED`).
-- **Subtle Scanline/Grid Atmosphere**: Background surfaces feature optional ultra-low opacity CSS linear-gradient grid lines ($120\text{px} \times 120\text{px}$ pitch) to reinforce the blueprint feel.
+- **Numbered Section Anchors**: Major page sections open with large oversized ordinal labels (`01`, `02`, `03`, `04`) in muted lime-green or low-opacity white, establishing an editorial magazine rhythm.
+- **Bracketed Monospace Tags**: System states, role badges, and track metadata remain encased in bracketed typographic enclosures: `[ ROLE: JUDGE ]`, `[ STATUS: LOCKED ]`.
+- **Status Indicators**: Minimal dot indicators signaling live status (`● LIVE`, `● CLOSED`), rendered in lime-green (`#B8FF57`) for active and muted grey for inactive.
+- **Dark Atmospheric Surface**: Background surfaces use near-black charcoal (`#0D0D0D`) with subtle low-opacity noise/grain texture overlays to convey depth without synthetic grid lines.
+- **Marquee / Ticker Strip**: Horizontal looping ticker strips (inspired by raptors.dev scrolling label bands) used between major sections to reinforce event categories, community tags, and live status signals.
 
 ### Logo & Wordmark Treatment
-- **Wordmark**: `VERITY` rendered in bold, geometric uppercase sans-serif with wide tracking:
+- **Wordmark**: `VERITY` rendered in bold, wide-tracking editorial uppercase grotesque:
   ```
   VERITY // [DOGFOOD-2026]
   ```
-- **Mark**: An abstract geometric caliper/scales glyph composed of pure CSS/SVG hairline vectors, symbolizing mathematical scoring calibration and balance.
+- **Mark**: An abstract angular precision glyph composed of pure CSS/SVG vectors, symbolizing speed, judgment, and engineering sharpness.
 
 ---
 
 ## 05. Color System
 
-The color palette is built on deep dark-mode contrast with curated semantic accents derived from the visual reference.
+The color palette is built on near-black charcoal surfaces with bold lime-green primary accents and clean editorial contrast, derived from the raptors.dev visual identity.
 
 ### Color Tokens Table
 
 | Token Name | HEX Value | CSS Variable | Intended Usage & Contrast Notes |
 | :--- | :--- | :--- | :--- |
-| **Brand Primary (Cyan)** | `#00E5D0` | `--color-brand-cyan` | Interactive highlights, active tabs, primary outlines, brand accent (11.8:1 contrast on `#0B1020`) |
-| **Brand Secondary (Pink)**| `#FF3D6E` | `--color-brand-pink` | Primary call-to-action buttons, deadline alerts, critical badges (6.2:1 contrast on `#0B1020`) |
-| **Background (Void)** | `#0B1020` | `--color-bg-void` | Root application background, page canvas |
-| **Surface Level 1** | `#0E1428` | `--color-surface-base` | Primary cards, table bodies, form field backgrounds |
-| **Surface Level 2** | `#131C36` | `--color-surface-raised`| Navigation headers, modal dialogs, elevated drawers |
-| **Surface Level 3** | `#16203A` | `--color-surface-hover` | Table row hover, input focus backgrounds |
-| **Border Subtle** | `#16203A` | `--color-border-subtle` | Subtle card dividers, nested cell borders |
-| **Border Default** | `#1B2540` | `--color-border-default`| Standard card borders, table outlines, button borders |
-| **Border Strong** | `#26355C` | `--color-border-strong` | Active container borders, hover card outlines |
-| **Border Accent** | `#00E5D0` | `--color-border-accent` | Focused inputs, selected items, header demarcation |
-| **Text Primary** | `#E6ECFF` | `--color-text-primary` | Main titles, table cells, form values (13.4:1 contrast on `#0B1020`) |
-| **Text Secondary** | `#AEBAD6` | `--color-text-secondary`| Descriptions, body copy, rubric prompts (8.5:1 contrast on `#0B1020`) |
-| **Text Muted** | `#6B7A9E` | `--color-text-muted` | Field labels, metadata tags, breadcrumbs (4.8:1 contrast on `#0B1020`) |
-| **Text Dim** | `#4A5A80` | `--color-text-dim` | Disabled text, decorative line markings |
-| **Semantic Success** | `#00E5A3` | `--color-success` | Submitted status, pass indicators in acceptance reports |
-| **Semantic Warning** | `#FFB800` | `--color-warning` | Looming deadlines, draft status, incomplete review batches |
-| **Semantic Error** | `#FF334B` | `--color-error` | Validation errors, late submission rejection, HTTP 403 Forbidden |
-| **Semantic Info** | `#3D8BFF` | `--color-info` | Track allocations, information tooltips, audit notices |
+| **Brand Primary (Lime Green)** | `#B8FF57` | `--color-brand-lime` | Interactive highlights, active tabs, primary outlines, CTAs, section ordinals (14.2:1 contrast on `#0D0D0D`) |
+| **Brand Secondary (Off-White)**| `#F0F0EC` | `--color-brand-offwhite` | Primary text headings, key labels, and editorial emphasis (18.6:1 contrast on `#0D0D0D`) |
+| **Background (Charcoal)** | `#0D0D0D` | `--color-bg-void` | Root application background, page canvas |
+| **Surface Level 1** | `#111111` | `--color-surface-base` | Primary cards, table bodies, form field backgrounds |
+| **Surface Level 2** | `#181818` | `--color-surface-raised`| Navigation headers, modal dialogs, elevated drawers |
+| **Surface Level 3** | `#1F1F1F` | `--color-surface-hover` | Table row hover, input focus backgrounds |
+| **Border Subtle** | `#1F1F1F` | `--color-border-subtle` | Subtle card dividers, nested cell borders |
+| **Border Default** | `#2A2A2A` | `--color-border-default`| Standard card borders, table outlines, button borders |
+| **Border Strong** | `#3A3A3A` | `--color-border-strong` | Active container borders, hover card outlines |
+| **Border Accent** | `#B8FF57` | `--color-border-accent` | Focused inputs, selected items, header demarcation |
+| **Text Primary** | `#F0F0EC` | `--color-text-primary` | Main titles, table cells, form values (18.6:1 contrast on `#0D0D0D`) |
+| **Text Secondary** | `#AAAAAA` | `--color-text-secondary`| Descriptions, body copy, rubric prompts (7.2:1 contrast on `#0D0D0D`) |
+| **Text Muted** | `#666666` | `--color-text-muted` | Field labels, metadata tags, breadcrumbs (4.5:1 contrast on `#0D0D0D`) |
+| **Text Dim** | `#444444` | `--color-text-dim` | Disabled text, decorative line markings |
+| **Semantic Success** | `#B8FF57` | `--color-success` | Submitted status, pass indicators in acceptance reports |
+| **Semantic Warning** | `#FFD166` | `--color-warning` | Looming deadlines, draft status, incomplete review batches |
+| **Semantic Error** | `#FF4444` | `--color-error` | Validation errors, late submission rejection, HTTP 403 Forbidden |
+| **Semantic Info** | `#57C8FF` | `--color-info` | Track allocations, information tooltips, audit notices |
 
 ---
 
 ## 06. Typography System
 
 ### Font Stacks (100% Offline Bundled)
-1. **Primary Display & Headings**: `'Syne'`, with fallbacks: `system-ui, -apple-system, sans-serif`. Heavy geometric grotesque with distinct technical presence.
+1. **Primary Display & Headings**: `'Inter'` (or `'Helvetica Neue'`), with fallbacks: `system-ui, -apple-system, sans-serif`. Bold editorial grotesque with strong vertical rhythm and high-impact large-scale presence.
 2. **Body & Interface Text**: `'JetBrains Mono'`, with fallbacks: `'SF Mono', 'Segoe UI Mono', monospace`. Exceptional tabular lining figures and monospace clarity.
-3. **Technical Metadata & Badges**: `'JetBrains Mono'` / `'VT323'`, with fallbacks: `monospace`. Used for uppercase bracketed metadata.
+3. **Technical Metadata & Badges**: `'JetBrains Mono'`, with fallbacks: `monospace`. Used for uppercase bracketed metadata and section ordinal numbers.
 
 ### Typographic Scale
 
 | Style / Level | Font Family | Size | Weight | Line Height | Letter Spacing | Intended Application |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Display** | `'Syne'` | 44px (2.75rem) | 800 | 1.1 | -0.02em | Hero titles, landing headers |
-| **H1** | `'Syne'` | 32px (2.00rem) | 800 | 1.2 | -0.01em | Page headers (Gallery, Portal, Dashboard) |
-| **H2** | `'Syne'` | 24px (1.50rem) | 700 | 1.25 | 0.00em | Section headers, modal titles |
-| **H3** | `'Syne'` | 18px (1.125rem) | 600 | 1.3 | +0.01em | Card titles, rubric criterion titles |
+| **Display** | `'Inter'` | 56px (3.50rem) | 800 | 1.05 | -0.03em | Hero titles, landing headers, section ordinals (01, 02...) |
+| **H1** | `'Inter'` | 36px (2.25rem) | 800 | 1.15 | -0.02em | Page headers (Gallery, Portal, Dashboard) |
+| **H2** | `'Inter'` | 26px (1.625rem) | 700 | 1.2 | -0.01em | Section headers, modal titles |
+| **H3** | `'Inter'` | 18px (1.125rem) | 600 | 1.3 | 0.00em | Card titles, rubric criterion titles |
 | **H4** | `'JetBrains Mono'` | 15px (0.9375rem)| 700 | 1.4 | +0.05em | Sub-panel labels, table group headers |
 | **Body Large** | `'JetBrains Mono'` | 15px (0.9375rem)| 400 | 1.6 | 0.00em | Project summaries, submission guidelines |
 | **Body** | `'JetBrains Mono'` | 13px (0.8125rem)| 400 | 1.5 | 0.00em | Standard table text, input text, body copy |
@@ -212,35 +213,35 @@ Verity enforces four rigid responsive tiers without altering product capability:
 ```css
 :root {
   /* Colors - Base Surfaces */
-  --bg-void: #0B1020;
-  --surface-base: #0E1428;
-  --surface-raised: #131C36;
-  --surface-hover: #16203A;
+  --bg-void: #0D0D0D;
+  --surface-base: #111111;
+  --surface-raised: #181818;
+  --surface-hover: #1F1F1F;
 
   /* Colors - Accents */
-  --brand-cyan: #00E5D0;
-  --brand-pink: #FF3D6E;
+  --brand-lime: #B8FF57;
+  --brand-offwhite: #F0F0EC;
 
   /* Colors - Typography */
-  --text-primary: #E6ECFF;
-  --text-secondary: #AEBAD6;
-  --text-muted: #6B7A9E;
-  --text-dim: #4A5A80;
+  --text-primary: #F0F0EC;
+  --text-secondary: #AAAAAA;
+  --text-muted: #666666;
+  --text-dim: #444444;
 
   /* Colors - Borders */
-  --border-subtle: #16203A;
-  --border-default: #1B2540;
-  --border-strong: #26355C;
-  --border-accent: #00E5D0;
+  --border-subtle: #1F1F1F;
+  --border-default: #2A2A2A;
+  --border-strong: #3A3A3A;
+  --border-accent: #B8FF57;
 
   /* Colors - Semantics */
-  --color-success: #00E5A3;
-  --color-warning: #FFB800;
-  --color-error: #FF334B;
-  --color-info: #3D8BFF;
+  --color-success: #B8FF57;
+  --color-warning: #FFD166;
+  --color-error: #FF4444;
+  --color-info: #57C8FF;
 
   /* Typography Stacks */
-  --font-display: 'Syne', system-ui, sans-serif;
+  --font-display: 'Inter', 'Helvetica Neue', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
 
   /* Spacing */
@@ -255,10 +256,10 @@ Verity enforces four rigid responsive tiers without altering product capability:
 
   /* Elevation & Radius */
   --radius-none: 0px;
-  --radius-sm: 2px;
-  --radius-md: 4px;
+  --radius-sm: 3px;
+  --radius-md: 6px;
   --border-hairline: 1px solid var(--border-default);
-  --border-active: 1px solid var(--brand-cyan);
+  --border-active: 1px solid var(--brand-lime);
 }
 ```
 
@@ -266,12 +267,12 @@ Verity enforces four rigid responsive tiers without altering product capability:
 
 ## 11. Borders, Radii, and Elevation
 
-### Industrial Hairlines
-- **Border Philosophy**: To preserve technical authenticity, Verity rejects soft drop shadows. Visual depth is established exclusively through surface lightness layering (`#0B1020` $\rightarrow$ `#0E1428` $\rightarrow$ `#131C36`) and sharp `1px` borders.
+### Editorial Hairlines
+- **Border Philosophy**: To preserve editorial authenticity, Verity rejects soft drop shadows. Visual depth is established exclusively through surface lightness layering (`#0D0D0D` $\rightarrow$ `#111111` $\rightarrow$ `#181818`) and minimal `1px` borders.
 - **Corner Radii**:
-  - Buttons, Inputs, Cards: `2px` (`--radius-sm`) or `0px` (`--radius-none`).
-  - Tags and Badges: `0px` (strict technical rectangle).
-- **Interactive Focus States**: Focus rings use an explicit `2px solid var(--brand-cyan)` outline with a `2px` offset, ensuring total keyboard accessibility compliance.
+  - Buttons, Inputs, Cards: `3px` (`--radius-sm`) or `6px` (`--radius-md`).
+  - Tags and Badges: `0px` (strict flat rectangle) or `2px` for pill-style track chips.
+- **Interactive Focus States**: Focus rings use an explicit `2px solid var(--brand-lime)` outline with a `2px` offset, ensuring total keyboard accessibility compliance.
 
 ---
 
@@ -292,27 +293,27 @@ Verity enforces four rigid responsive tiers without altering product capability:
 ## 13. Component System
 
 ### 1. Buttons
-- **Primary CTA (`.btn-primary`)**: Solid `#FF3D6E` background, `#0B1020` text, bold monospace uppercase. On hover: inverts to `#0B1020` background with `#FF3D6E` border and text.
-- **Secondary Action (`.btn-secondary`)**: `#0E1428` background, `1px solid #1B2540` border, `#E6ECFF` text. On hover: border turns `#00E5D0`.
-- **Destructive Action (`.btn-danger`)**: Dark `#240B10` background, `1px solid #FF334B` border, `#FF334B` text.
+- **Primary CTA (`.btn-primary`)**: Solid `#B8FF57` background, `#0D0D0D` text, bold grotesque uppercase. On hover: background shifts to `#CBFF85`, maintaining dark text. Strong visual anchor.
+- **Secondary Action (`.btn-secondary`)**: `#111111` background, `1px solid #2A2A2A` border, `#F0F0EC` text. On hover: border turns `#B8FF57`, text stays off-white.
+- **Destructive Action (`.btn-danger`)**: Dark `#1A0A0A` background, `1px solid #FF4444` border, `#FF4444` text.
 
 ### 2. Form Inputs & Selects
-- Dark `#0E1428` background, `1px solid #1B2540` border.
-- Text: `#E6ECFF`, Font: `'JetBrains Mono'`.
+- Dark `#111111` background, `1px solid #2A2A2A` border.
+- Text: `#F0F0EC`, Font: `'JetBrains Mono'`.
 - Padding: `8px 12px` (height: `38px`).
-- Focus: `1px solid #00E5D0`, subtle glow box-shadow `0 0 0 1px #00E5D0`.
-- Read-only / Disabled: Background `#090D1A`, text `#4A5A80`, cursor `not-allowed`.
+- Focus: `1px solid #B8FF57`, subtle glow box-shadow `0 0 0 1px #B8FF57`.
+- Read-only / Disabled: Background `#0A0A0A`, text `#444444`, cursor `not-allowed`.
 
 ### 3. Project Submission Card (`.df-card`)
-- Container: `#0E1428` background, `1px solid #1B2540`.
+- Container: `#111111` background, `1px solid #2A2A2A`.
 - Header: Track badge `[ TRACK / DEV TOOLS ]` and submission timestamp.
-- Body: Project title (`'Syne'`, 18px), one-line summary (`'JetBrains Mono'`, 13px, `#AEBAD6`).
+- Body: Project title (`'Inter'`, 20px, weight 700), one-line summary (`'JetBrains Mono'`, 13px, `#AAAAAA`).
 - Footer: Team members list, GitHub repo link, and evaluation status badge.
 
 ### 4. Rubric Rating Radio / Number Stepper
 - Stepper buttons: `[ 1 ] [ 2 ] [ 3 ] [ 4 ] [ 5 ]` displayed in an inline row.
-- Inactive state: `#0E1428` background, `1px solid #1B2540` border, `#AEBAD6` text.
-- Selected state: `#00E5D0` background, `#0B1020` dark bold text, `1px solid #00E5D0`.
+- Inactive state: `#111111` background, `1px solid #2A2A2A` border, `#AAAAAA` text.
+- Selected state: `#B8FF57` background, `#0D0D0D` dark bold text, `1px solid #B8FF57`.
 
 ---
 
@@ -320,11 +321,11 @@ Verity enforces four rigid responsive tiers without altering product capability:
 
 ```
 +----------------------------------------------------------------------------------------------------+
-| [RA-ICON] VERITY // DF-2026   [● SYS READY]    Gallery  Submit  JudgePortal  Console  [ROLE: JUDGE] |
+| [▶ VERITY] VERITY // DF-2026   [● LIVE]    01 Gallery  02 Submit  03 Judge  04 Console  [JUDGE] |
 +----------------------------------------------------------------------------------------------------+
 ```
 
-- **Top Bar**: Fixed 50px height, background `#0B1020`, bordered bottom by `1px solid #16203A`.
+- **Top Bar**: Fixed 56px height, background `#0D0D0D`, bordered bottom by `1px solid #1F1F1F`.
 - **Role Badge**: Monospace tag in top right showing active session persona (e.g. `[ SESSION: jdg_a_91bc ]`). Clicking displays an inspection drawer detailing active role permissions.
 - **Mobile Navigation**: Collapses into a full-height terminal drawer with high-contrast text links and quick role indicators.
 
@@ -457,9 +458,9 @@ graph TD
 ## 24. Tables and Data-Dense Interfaces
 
 ### Table Styling Specification
-- **Table Container**: `1px solid var(--border-default)`, background `#0E1428`.
-- **Header Row**: Height `36px`, background `#131C36`, text `'JetBrains Mono'`, 11px uppercase, tracking `0.10em`, color `#6B7A9E`.
-- **Data Rows**: Height `44px`, border-bottom `1px solid #16203A`. On hover: background shifts to `#16203A`.
+- **Table Container**: `1px solid var(--border-default)`, background `#111111`.
+- **Header Row**: Height `36px`, background `#181818`, text `'JetBrains Mono'`, 11px uppercase, tracking `0.10em`, color `#666666`.
+- **Data Rows**: Height `44px`, border-bottom `1px solid #1F1F1F`. On hover: background shifts to `#1F1F1F`.
 - **Cell Padding**: `8px 16px`.
 - **Numeric Alignment**: All scores, review counts, and timestamps use tabular monospace lining numerals aligned right. Text fields align left.
 
@@ -469,7 +470,7 @@ graph TD
 
 ### 1. Judge Review Completion Donut / Progress Bar
 - **Data**: Completed reviews vs. assigned queue size per judge ($N_j / \text{QueueSize}$).
-- **Form**: Compact horizontal segmented meter (`#00E5D0` for completed, `#1B2540` for pending).
+- **Form**: Compact horizontal segmented meter (`#B8FF57` for completed, `#2A2A2A` for pending).
 
 ### 2. Cross-Judge Score Distribution Scatter / Box
 - **Data**: Raw review score spreads ($S_{p, j}$) across judges.
@@ -481,14 +482,14 @@ graph TD
 
 | UI State | Visual Treatment | Messaging / Feedback Example |
 | :--- | :--- | :--- |
-| **Default** | Surface `#0E1428`, Border `#1B2540` | Ready for interaction |
-| **Hover** | Border `#26355C` or `#00E5D0` | Subtle hairline illumination |
-| **Focus** | Outline `2px solid #00E5D0`, offset 2px | Keyboard focus indicator |
+| **Default** | Surface `#111111`, Border `#2A2A2A` | Ready for interaction |
+| **Hover** | Border `#3A3A3A` or `#B8FF57` | Subtle lime-green hairline illumination |
+| **Focus** | Outline `2px solid #B8FF57`, offset 2px | Keyboard focus indicator |
 | **Loading** | Monospace pulsing ticker `[ COMPUTING NORMALIZATION... ]` | Indeterminate linear sweep bar |
-| **Success** | Border `#00E5A3`, Badge `[ SAVED ]` | `Review submitted successfully.` |
-| **Error** | Border `#FF334B`, Text `#FF334B` | `Validation failed: Criterion ratings must be between 1 and 5.` |
-| **Deadline Passed** | Surface `#1F1417`, Border `#FF3D6E` | `[ SUBMISSIONS LOCKED: CUTOFF TIMESTAMP REACHED ]` |
-| **Forbidden (403)** | Full screen dark red panel, Monospace bold text | `[ HTTP 403 FORBIDDEN: PEER SCORES ARE ISOLATED ]` |
+| **Success** | Border `#B8FF57`, Badge `[ SAVED ]` | `Review submitted successfully.` |
+| **Error** | Border `#FF4444`, Text `#FF4444` | `Validation failed: Criterion ratings must be between 1 and 5.` |
+| **Deadline Passed** | Surface `#1A0F0F`, Border `#FF4444` | `[ SUBMISSIONS LOCKED: CUTOFF TIMESTAMP REACHED ]` |
+| **Forbidden (403)** | Full screen dark panel, Monospace bold text | `[ HTTP 403 FORBIDDEN: PEER SCORES ARE ISOLATED ]` |
 
 ---
 
@@ -521,10 +522,10 @@ graph TD
 ## 29. Accessibility Requirements (WCAG 2.1 AA)
 
 1. **Color Contrast**:
-   - Text Primary (`#E6ECFF`) on Void (`#0B1020`): **13.4:1** (exceeds AAA).
-   - Text Secondary (`#AEBAD6`) on Surface (`#0E1428`): **8.5:1** (exceeds AAA).
-   - Brand Accent Cyan (`#00E5D0`) on Void (`#0B1020`): **11.8:1** (exceeds AAA).
-   - Brand Accent Pink (`#FF3D6E`) on Void (`#0B1020`): **6.2:1** (exceeds AA).
+   - Text Primary (`#F0F0EC`) on Void (`#0D0D0D`): **18.6:1** (exceeds AAA).
+   - Text Secondary (`#AAAAAA`) on Surface (`#111111`): **7.2:1** (exceeds AAA).
+   - Brand Accent Lime (`#B8FF57`) on Void (`#0D0D0D`): **14.2:1** (exceeds AAA).
+   - Brand Off-White (`#F0F0EC`) on Surface (`#111111`): **17.8:1** (exceeds AAA).
 2. **Keyboard Navigation**:
    - All interactive elements (steppers, filter tabs, inputs, modals) are fully operable via `Tab`, `Space`, `Enter`, and Arrow keys.
    - Modals trap focus; pressing `Escape` closes the active overlay.
@@ -623,7 +624,7 @@ design-system/
 
 - [ ] **Color Contrast**: All text meets WCAG AA standards (4.5:1 for body, 3:1 for large text).
 - [ ] **Offline Execution**: Page renders identically with zero external network connectivity.
-- [ ] **Typography Uniformity**: Only `'Syne'` and `'JetBrains Mono'` are rendered; fallbacks match geometry.
+- [ ] **Typography Uniformity**: Only `'Inter'` and `'JetBrains Mono'` are rendered; fallbacks match geometry.
 - [ ] **Hairline Consistency**: All borders are strictly `1px solid` without blurry shadows.
 - [ ] **State Coverage**: Every form field and button has documented default, hover, focus, active, disabled, and error states.
 - [ ] **Peer Isolation Feedback**: Probing another judge’s scores renders a clear HTTP 403 error slate.
@@ -643,7 +644,7 @@ design-system/
 ### DON'T:
 - **DON'T** add social features, like counts, favorites, or user follower graphs.
 - **DON'T** hide peer score data in frontend templates while leaving API routes exposed.
-- **DON'T** use soft rounded pastel cards or generic SaaS marketing illustrations.
+- **DON'T** use soft rounded pastel cards, faded blue/purple gradients, or generic SaaS marketing illustrations.
 - **DON'T** load webfonts, scripts, or stylesheets from external CDNs.
 
 ---
@@ -672,8 +673,8 @@ design-system/
 ## 39. Design Decisions and Open Questions
 
 ### Design Decisions (Safe Visual Proposals)
-1. **Decision**: Deep obsidian base (`#0B1020`) with hairline cyan/pink borders.  
-   *Rationale*: Directly matches the atmosphere and technical authority of `dogfoodhack.com`.
+1. **Decision**: Near-black charcoal base (`#0D0D0D`) with lime-green accent borders and editorial section ordinals.  
+   *Rationale*: Directly matches the atmosphere and guild authority of `raptors.dev`.
 2. **Decision**: Explicit inline Persona Switcher drawer.  
    *Rationale*: Greatly accelerates manual and automated validation of `.dogfood.toml` sessions.
 3. **Decision**: Dual-pane judging workstation on desktop screens.  
@@ -689,9 +690,9 @@ design-system/
 
 ## 40. Final Design Summary
 
-The Verity design system provides an **implementation-ready, technically authoritative specification** that unites the functional rigor of [`SPEC.md`](file:///d:/Code/DogFood/Verity/SPEC.md) with the technical visual identity of [`dogfoodhack.com`](https://dogfoodhack.com/). 
+The Verity design system provides an **implementation-ready, technically authoritative specification** that unites the functional rigor of [`SPEC.md`](file:///d:/Code/DogFood/Verity/SPEC.md) with the bold editorial guild identity of [`raptors.dev`](https://www.raptors.dev/). 
 
-By prioritizing high-density tabular clarity, mathematical transparency, 100% offline self-containment, and visible server-enforced security boundaries, the design ensures that when Verity is launched via `docker compose up`, it delivers an immediate impression of integrity, engineering excellence, and uncompromising usability.
+By prioritizing high-density tabular clarity, mathematical transparency, 100% offline self-containment, and visible server-enforced security boundaries — all rendered through a near-black charcoal palette with lime-green accents and editorial section structure — the design ensures that when Verity is launched via `docker compose up`, it delivers an immediate impression of integrity, engineering excellence, and uncompromising usability.
 
 ---
 
@@ -701,6 +702,6 @@ By prioritizing high-density tabular clarity, mathematical transparency, 100% of
 
 ### Exploration 1: High-Contrast Monochromatic Wireframe Mode
 - **Application**: Public Gallery and Organizer Tables.
-- **Visual Treatment**: Strips out cyan and pink accents, utilizing pure stark white (`#FFFFFF`) on true black (`#000000`) with alternating grayscale zebra striping (`#111111`).
+- **Visual Treatment**: Strips out lime-green accents, utilizing pure stark white (`#FFFFFF`) on true black (`#000000`) with alternating grayscale zebra striping (`#111111`).
 - **Purpose**: Maximizes readability under direct sunlight or low-grade projection displays during live hackathon closing ceremonies.
 - **Implementation**: Toggled via a single root class `.theme-wireframe` modifying base color tokens. Does not alter layout or data structures.

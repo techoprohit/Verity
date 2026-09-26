@@ -7,9 +7,12 @@
 export async function renderJudge() {
     return `
         <div class="df-header-block">
-            <div>
-                <h2>Judging Console</h2>
-                <p class="text-muted">Rigorous multi-criteria evaluation with mathematically enforced score isolation.</p>
+            <div class="df-section-title-wrap">
+                <span class="df-ordinal">03</span>
+                <div>
+                    <h2>Judging Console</h2>
+                    <p class="text-muted">Rigorous multi-criteria evaluation with mathematically enforced score isolation.</p>
+                </div>
             </div>
             <div>
                 <span class="df-tag" id="judge-role-badge">[ AUTH: VERIFYING... ]</span>

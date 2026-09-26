@@ -6,9 +6,12 @@
 export async function renderSubmit() {
     return `
         <div class="df-header-block">
-            <div>
-                <h2>Participant Portal</h2>
-                <p class="text-muted">Draft and finalize your team's hackathon project entry.</p>
+            <div class="df-section-title-wrap">
+                <span class="df-ordinal">02</span>
+                <div>
+                    <h2>Participant Portal</h2>
+                    <p class="text-muted">Draft and finalize your team's hackathon project entry.</p>
+                </div>
             </div>
             <div>
                 <span class="df-tag" id="portal-role-tag">[ AUTH: PARTICIPANT ]</span>
