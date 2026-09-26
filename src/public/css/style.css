@@ -1,0 +1,238 @@
+/* Verity Design System - Technical Industrialism & Editorial Restraint */
+
+:root {
+  /* Colors - Base Surfaces */
+  --bg-void: #0B1020;
+  --surface-base: #0E1428;
+  --surface-raised: #131C36;
+  --surface-hover: #16203A;
+
+  /* Colors - Accents */
+  --brand-cyan: #00E5D0;
+  --brand-pink: #FF3D6E;
+
+  /* Colors - Typography */
+  --text-primary: #E6ECFF;
+  --text-secondary: #AEBAD6;
+  --text-muted: #6B7A9E;
+  --text-dim: #4A5A80;
+
+  /* Colors - Borders */
+  --border-subtle: #16203A;
+  --border-default: #1B2540;
+  --border-strong: #26355C;
+  --border-accent: #00E5D0;
+
+  /* Colors - Semantics */
+  --color-success: #00E5A3;
+  --color-warning: #FFB800;
+  --color-error: #FF334B;
+  --color-info: #3D8BFF;
+
+  /* Typography Stacks */
+  --font-display: 'Syne', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Segoe UI Mono', monospace;
+
+  /* Spacing */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* Elevation & Radius */
+  --radius-none: 0px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --border-hairline: 1px solid var(--border-default);
+  --border-active: 1px solid var(--brand-cyan);
+}
+
+/* Reset & Global Canvas */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-void);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  /* Optional ultra-low opacity CSS linear-gradient grid lines */
+  background-image: 
+    linear-gradient(to right, rgba(27, 37, 64, 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(27, 37, 64, 0.3) 1px, transparent 1px);
+  background-size: 120px 120px;
+}
+
+/* Typography Classes */
+h1 { font-family: var(--font-display); font-size: 32px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; color: var(--text-primary); margin-bottom: var(--sp-6); }
+h2 { font-family: var(--font-display); font-size: 24px; font-weight: 700; line-height: 1.25; margin-bottom: var(--sp-4); }
+h3 { font-family: var(--font-display); font-size: 18px; font-weight: 600; line-height: 1.3; letter-spacing: 0.01em; margin-bottom: var(--sp-2); }
+h4 { font-family: var(--font-mono); font-size: 15px; font-weight: 700; line-height: 1.4; letter-spacing: 0.05em; color: var(--text-secondary); text-transform: uppercase; }
+
+p { color: var(--text-secondary); margin-bottom: var(--sp-4); }
+.text-muted { color: var(--text-muted); }
+.text-dim { color: var(--text-dim); }
+
+/* Bracketed Metadata Tags */
+.df-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.df-tag::before { content: "[ "; color: var(--text-dim); }
+.df-tag::after { content: " ]"; color: var(--text-dim); }
+
+/* Status Indicators */
+.df-status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-success);
+  border-radius: 50%;
+  margin-right: var(--sp-2);
+  vertical-align: middle;
+}
+.df-status-dot.offline { background-color: var(--color-error); }
+.df-status-dot.warning { background-color: var(--color-warning); }
+
+/* Layout Architecture */
+.df-navbar {
+  height: 50px;
+  background-color: var(--bg-void);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--sp-6);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.df-nav__brand {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.df-nav__brand span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.df-nav__links {
+  display: flex;
+  gap: var(--sp-6);
+}
+
+.df-nav__links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  transition: color 120ms linear;
+}
+
+.df-nav__links a:hover, .df-nav__links a.active {
+  color: var(--brand-cyan);
+}
+
+.df-nav__persona {
+  cursor: pointer;
+  transition: color 120ms linear;
+}
+.df-nav__persona:hover {
+  color: var(--text-primary);
+}
+
+.df-container {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: var(--sp-8) var(--sp-8);
+}
+
+.df-footer {
+  border-top: var(--border-hairline);
+  padding: var(--sp-6) var(--sp-8);
+  margin-top: var(--sp-12);
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-muted);
+}
+
+/* Base Primitives (Buttons) */
+.btn-primary, .btn-secondary, .btn-danger {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  height: 38px;
+  padding: 0 var(--sp-4);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 120ms linear;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary {
+  background-color: var(--brand-pink);
+  color: var(--bg-void);
+  border: 1px solid var(--brand-pink);
+}
+.btn-primary:hover {
+  background-color: var(--bg-void);
+  color: var(--brand-pink);
+}
+
+.btn-secondary {
+  background-color: var(--surface-base);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+}
+.btn-secondary:hover {
+  border-color: var(--brand-cyan);
+}
+
+.btn-danger {
+  background-color: #240B10;
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+}
+
+/* Accessibility */
+:focus {
+  outline: 2px solid var(--brand-cyan);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
