@@ -18,16 +18,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static frontend assets from public/
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Authentication & Role Middleware applied globally
 app.use(authMiddleware);
 
-// Mount route controllers
+// Mount route controllers (order matters: specific routes before parameterized ones)
+app.use('/', submissionRoutes);    // GET /projects/my-submission, POST /projects/new
 app.use('/', galleryRoutes);       // GET /projects, GET /projects/:id
-app.use('/', submissionRoutes);    // POST /projects/new
 app.use('/', judgingRoutes);       // GET/POST /api/judge/scores
 app.use('/', organizerRoutes);     // GET /api/export.csv, GET /api/dashboard
+
+// SPA catch-all: serve index.html for client-side routes only (not API or file requests)
+app.get('*', (req, res) => {
+    // Skip if it looks like an API call or a file request
+    if (req.path.startsWith('/projects') || req.path.startsWith('/api') || req.path.includes('.')) {
+        return res.status(404).json({ error: 'Not found' });
+    }
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Health check
 app.get('/health', (req, res) => {
