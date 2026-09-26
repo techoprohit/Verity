@@ -85,18 +85,34 @@ The DOGFOOD 2026 tier ladder defines the platform capability levels:
 
 ---
 
-## 6. Current Tier Claim
+## 6. Tech Stack
 
-> **Current Claimed Tier:** **None / Unclaimed (T0 - Architecture & Inception Phase)**
+| Layer | Technology | Why |
+| :--- | :--- | :--- |
+| **Runtime** | Node.js v22 | Cross-platform, single-language stack, native `--watch` dev mode |
+| **HTTP Framework** | Express.js 4.x | Minimal routing, proven middleware pipeline, zero magic |
+| **Database** | SQLite via `better-sqlite3` | Embedded, zero-config, WAL mode for concurrent reads, instant cold boot |
+| **Frontend** | Vanilla HTML / CSS / JS | No build step, no bundler, zero CDN calls — true offline operation |
+| **Containerization** | Docker + Docker Compose | One-command deployment per DOGFOOD mandate |
 
-In strict adherence to DOGFOOD rule #5 (*"Honest tier claims, declared in .dogfood.toml. Overclaiming is penalised"*):
-- The repository currently contains the event specification ([`SPEC.md`](file:///d:/Code/DogFood/Verity/SPEC.md)) and foundational documentation.
-- No backend endpoints, UI components, database schemas, or Docker container services have been deployed to the workspace yet.
-- Neither T1 nor T2 is claimed until the application code is present and verified by the acceptance checker.
+**Why not React/Next.js?** The One Command Rule demands instant boot with zero build steps. React introduces a compilation pipeline, multi-megabyte bundles, and hydration delays. Vanilla HTML is served directly by Express — no Webpack, no Babel, no build artifacts.
+
+**Why not PostgreSQL?** SQLite boots in milliseconds with zero configuration. PostgreSQL requires container health-check delays, retry logic, password management, and network bridges. For hackathon-scale workloads (<50 concurrent writes/sec), SQLite in WAL mode is faster and more reliable. See [Section 19: Migration Path](#19-migration-path-to-production) for the upgrade strategy.
 
 ---
 
-## 7. Architecture Overview
+## 7. Current Tier Claim
+
+> **Current Claimed Tier:** **None / Unclaimed (Scaffold Phase)**
+
+In strict adherence to DOGFOOD rule #5 (*"Honest tier claims, declared in .dogfood.toml. Overclaiming is penalised"*):
+- The project scaffold is in place: Express server, SQLite database, auth middleware, route stubs, Docker deployment files.
+- No tier is claimed until the acceptance checker (`run.py`) passes all probes for that tier.
+- Neither T1 nor T2 is claimed until verified by the acceptance checker.
+
+---
+
+## 8. Architecture Overview
 
 Verity is designed around the **One Command Rule**: zero external dependencies, no SaaS authentication, and complete offline operability on localhost.
 
@@ -107,14 +123,14 @@ Verity is designed around the **One Command Rule**: zero external dependencies, 
                                            |
                                            v
 +------------------+         +----------------------------+         +------------------+
-|   Participant    | ------> |    Reverse Proxy / HTTP    | <------ |      Judge       |
+|   Participant    | ------> |   Express.js HTTP Server   | <------ |      Judge       |
 +------------------+         |    Port 8080 (Localhost)   |         +------------------+
                              +----------------------------+
                                            |
                                            v
                              +----------------------------+
+                             |   src/middleware/auth.js   |
                              |   Role Isolation & Auth    |
-                             |   Middleware (Session/Token|
                              +----------------------------+
                                            |
                  +-------------------------+-------------------------+
@@ -122,27 +138,27 @@ Verity is designed around the **One Command Rule**: zero external dependencies, 
                  v                         v                         v
      +-----------------------+ +-----------------------+ +-----------------------+
      |  Gallery & Submission | |    Judging Engine     | |   Organizer Dashboard |
-     |      Subsystem        | | & Normalization Math  | |     & CSV Exporter    |
+     |  routes/gallery.js    | |  routes/judging.js    | |  routes/organizer.js  |
      +-----------------------+ +-----------------------+ +-----------------------+
                  |                         |                         |
                  +-------------------------+-------------------------+
                                            |
                                            v
                              +----------------------------+
-                             |   Relational Persistence   |
-                             |  (SQLite / PostgreSQL DB)  |
+                             |   src/db/database.js       |
+                             |   SQLite (WAL Mode)        |
                              +----------------------------+
 ```
 
 ### Key Architectural Tenets:
-1. **Offline Isolation**: All assets, fonts, styles, scripts, and runtime dependencies are bundled locally.
-2. **Backend Security Layer**: Access control is executed in HTTP middleware before reaching route handlers. A direct `curl` request lacking proper credentials receives a 401 or 403.
-3. **Deterministic Seeding**: Database seeding executes on container boot, populating the environment with the exact `fixtures.json` dataset.
+1. **Offline Isolation**: All assets, fonts, styles, scripts, and runtime dependencies are bundled locally. No CDN, no external API calls.
+2. **Backend Security Layer**: Access control is executed in HTTP middleware (`src/middleware/auth.js`) before reaching route handlers. A direct `curl` request lacking proper credentials receives a 401 or 403.
+3. **Deterministic Seeding**: Database seeding executes on container boot via `src/db/seed.js`, populating the environment with the exact `fixtures.json` dataset.
 4. **Stateless Testability**: Predefined session cookies/headers map directly to seeded personas, enabling instant automated verification without browser automation or login UI friction.
 
 ---
 
-## 8. Quick Start
+## 9. Quick Start
 
 ### Prerequisites
 - [Docker](https://docs.docker.com/get-docker/) (v24.0 or newer)
@@ -150,11 +166,18 @@ Verity is designed around the **One Command Rule**: zero external dependencies, 
 - [Python 3.10+](https://www.python.org/) *(only required if executing the acceptance test script on the host)*
 
 ### Running with Docker Compose
-Once the application stack is assembled, launch the entire platform with one command:
+Launch the entire platform with one command:
 
 ```bash
 docker compose up --build
 ```
+
+### Running Locally (without Docker)
+```bash
+npm install
+npm run dev
+```
+The server starts on `http://localhost:8080` with `--watch` mode for live reloading.
 
 ### Localhost Access
 Once booted, open your browser or API client to:
@@ -175,7 +198,7 @@ For development, manual verification, and the acceptance checker, the portal pro
 
 ---
 
-## 9. How to Run the Acceptance Checker
+## 10. How to Run the Acceptance Checker
 
 The acceptance checker (`run.py`, defined in Appendix A of [`SPEC.md`](file:///d:/Code/DogFood/Verity/SPEC.md)) runs on standard Python 3 with zero third-party dependencies.
 
@@ -205,7 +228,7 @@ The output will be saved into `acceptance-report.txt` and committed to the repos
 
 ---
 
-## 10. How the Seeded Fixture Data Works
+## 11. How the Seeded Fixture Data Works
 
 DOGFOOD provides a shared `fixtures.json` file representing a standardized hackathon state:
 - **Event**: `Sample Hack 2026` (`evt_01`), with `submissions_close` set to `2026-03-01T18:00:00Z` (deliberately in the past).
@@ -224,7 +247,7 @@ The platform ingestion engine is explicitly designed to handle awkward fixture s
 
 ---
 
-## 11. Main User Workflows
+## 12. Main User Workflows
 
 ### Organizer
 1. **Setup**: Define event name, track taxonomy, and submission deadlines.
@@ -252,7 +275,7 @@ The platform ingestion engine is explicitly designed to handle awkward fixture s
 
 ---
 
-## 12. Security & Role Isolation
+## 13. Security & Role Isolation
 
 A fundamental requirement of the DOGFOOD specification is **backend-enforced access control**:
 - **Zero Frontend-Only Security**: Hiding elements or masking API responses in client-side templates is considered an immediate failure. A raw `curl` request to any protected route must fail with HTTP `401 Unauthorized` or `403 Forbidden`.
@@ -270,7 +293,7 @@ A fundamental requirement of the DOGFOOD specification is **backend-enforced acc
 
 ---
 
-## 13. Judging & Normalization Summary
+## 14. Judging & Normalization Summary
 
 ### Weighted Scoring
 Each rubric criterion $c_i$ is assigned an organizer weight $w_i$. For a given judge review with raw criterion scores $s_i \in [1, 5]$, the composite score $S_{raw}$ is computed as:
@@ -295,7 +318,7 @@ $$S_{norm}(p, j) = \mu_{global} + (z_{p, j} \cdot \sigma_{global})$$
 
 ---
 
-## 14. Data Import / Export
+## 15. Data Import / Export
 
 ### Ingestion (Import)
 - Initial database population is executed via a deterministic seed pipeline reading `fixtures.json`.
@@ -312,7 +335,7 @@ $$S_{norm}(p, j) = \mu_{global} + (z_{p, j} \cdot \sigma_{global})$$
 
 ---
 
-## 15. Testing
+## 16. Testing
 
 The project incorporates multiple testing tiers:
 1. **DOGFOOD Acceptance Suite**:
@@ -327,46 +350,87 @@ The project incorporates multiple testing tiers:
 
 ---
 
-## 16. Known Limitations & Unfinished Features
+## 17. Known Limitations & Unfinished Features
 
 In the spirit of honest gap reporting:
-1. **Source Code Implementation Pending**: The repository is currently at the specification and architecture phase. Application source code, database migrations, and frontend templates have not yet been implemented.
-2. **Acceptance Checker Not Yet Runnable**: Because the application server is not yet deployed, running `run.py` against `http://localhost:8080` will currently fail connection probes.
-3. **No Active Docker Compose Services**: `docker-compose.yml` has not yet been authored.
+1. **Schema & Seeding In Progress**: The Express server boots and responds, but database tables and fixture ingestion are under active development.
+2. **Acceptance Checker Not Yet Passing**: Route stubs exist but do not yet serve fixture-backed data. `run.py` probes will partially fail until controllers query real data.
+3. **Frontend Not Yet Built**: The `public/` directory is empty. HTML/CSS/JS pages for the gallery, submission forms, and judge console are pending.
 4. **Community Voting (T3) Unimplemented**: Public ballot allocation and anti-Sybil rate limiting are designed but not built.
 5. **Stretch Features (T4) Deferred**: Webhook dispatchers, cryptographic certificates, and embeddable widgets remain in the planned backlog.
 
 ---
 
-## 17. Project Structure
-
-The planned repository layout following the DOGFOOD specification:
+## 18. Project Structure
 
 ```
 Verity/
-├── .dogfood.toml           # Acceptance checker configuration & tier claims
-├── docker-compose.yml      # One-command orchestration for offline portal
-├── fixtures.json           # Standardized DOGFOOD hackathon dataset
-├── run.py                  # Acceptance test runner
-├── acceptance-report.txt   # Verified output generated by run.py
-├── README.md               # Project documentation & status
-├── SPEC.md                 # Official DOGFOOD 2026 specification
-├── ARCHITECTURE.md         # Detailed architectural decisions & trade-offs
-├── DATA-MODEL.md           # Database schemas, relationships, and seed pipelines
-├── JUDGING.md              # Mathematical proof and defense of normalization
-├── LICENSE                 # Open source license (MIT)
-├── src/                    # Application source code
-└── tests/                  # Integration & unit test suites
+├── .dogfood.toml              # Tier claims & acceptance config
+├── .gitignore
+├── docker-compose.yml         # One-command orchestration
+├── Dockerfile                 # Alpine Node.js container
+├── package.json               # Dependencies: express, better-sqlite3
+├── fixtures.json              # DOGFOOD seed dataset
+├── run.py                     # Acceptance test runner
+├── README.md
+├── SPEC.md                    # Official DOGFOOD 2026 specification
+├── ARCHITECTURE.md            # System design & rationale
+├── DATA-MODEL.md              # Schema & seed pipelines
+├── JUDGING.md                 # Scoring math & normalization proof
+├── SECURITY.md                # Threat model & auth audit
+├── DESIGN.md                  # Visual system & component spec
+├── LICENSE                    # MIT
+├── public/                    # Frontend assets (HTML/CSS/JS)
+│   ├── index.html
+│   ├── css/
+│   └── js/
+├── src/                       # Backend source
+│   ├── server.js              # Express entry point (port 8080)
+│   ├── db/
+│   │   ├── database.js        # SQLite connection (WAL mode)
+│   │   ├── schema.sql         # Table definitions
+│   │   └── seed.js            # fixtures.json ingestion
+│   ├── middleware/
+│   │   └── auth.js            # Session resolution & role gating
+│   ├── routes/
+│   │   ├── gallery.js         # Public project browsing
+│   │   ├── submissions.js     # Draft & deadline enforcement
+│   │   ├── judging.js         # Scorecard & peer isolation
+│   │   └── organizer.js       # Dashboard & CSV export
+│   ├── engine/
+│   │   └── normalize.js       # Weighted rubric + Z-score math
+│   └── audit/
+│       └── logger.js          # Append-only audit ledger
+└── tests/                     # Unit & integration tests
+    ├── normalization.test.js
+    └── isolation.test.js
 ```
 
 ---
 
-## 18. License
+## 19. Migration Path to Production
+
+Verity is built to win the hackathon first and scale to production second. The architecture intentionally isolates all database-specific code so that every layer can be upgraded without rewriting business logic.
+
+| Layer | Hackathon (Now) | Production (Raptors Dev) | Effort |
+| :--- | :--- | :--- | :--- |
+| **Database** | SQLite (embedded file) | PostgreSQL | ~2-4 hours: swap driver in `src/db/database.js` |
+| **Auth** | Static session tokens | bcrypt + OAuth2 | ~1 day: add login routes, session store |
+| **Static Assets** | Express `static()` | Nginx reverse proxy | ~1 hour: add Nginx to compose |
+| **Scaling** | Single process | Multiple instances + load balancer | Requires PostgreSQL first |
+| **File Storage** | Local disk | S3 / MinIO | ~4 hours: storage abstraction |
+| **Monitoring** | Console logs | Pino + `/health` endpoint | ~2 hours |
+
+**Why this works:** All SQL is isolated in `src/db/` using standard syntax. No SQLite extensions leak into controllers. Swapping the database is a single-file change.
+
+---
+
+## 20. License
 Verity is open-source software licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 ---
 
-## 19. DOGFOOD-Specific Notes
+## 21. DOGFOOD-Specific Notes
 
 - **Offline Mandate**: Verity requires zero internet access after Docker image build. No external CDNs, Google Fonts, or cloud authentication endpoints are called.
 - **Port Mapping**: The service exposes port `8080` on localhost as defined in `.dogfood.toml`.
@@ -375,25 +439,26 @@ Verity is open-source software licensed under the [MIT License](https://opensour
 
 ---
 
-## 20. Honest Status
+## 22. Honest Status
 
 | Category / Capability | Dogfood Tier | Specification Status | Implementation Status |
 | :--- | :--- | :--- | :--- |
-| **Authentication & Role System** | T1 | Defined (5 roles) | ❌ Not Implemented |
+| **Authentication & Role System** | T1 | Defined (5 roles) | 🔧 Scaffolded (middleware + static tokens) |
 | **Event & Track Configuration** | T1 | Defined | ❌ Not Implemented |
 | **Team Invite Link Formation** | T1 | Defined | ❌ Not Implemented |
-| **Draft Submission & Editing** | T1 | Defined | ❌ Not Implemented |
-| **Strict Deadline Rejection** | T1 | Defined | ❌ Not Implemented |
-| **Public Project Gallery** | T1 | Defined | ❌ Not Implemented |
+| **Draft Submission & Editing** | T1 | Defined | 🔧 Route stub exists |
+| **Strict Deadline Rejection** | T1 | Defined | 🔧 Route stub returns 400 |
+| **Public Project Gallery** | T1 | Defined | 🔧 Route stub returns 200 |
 | **Judge Allocation & Queues** | T2 | Defined | ❌ Not Implemented |
 | **Weighted Rubric Scoring** | T2 | Mathematically Defined | ❌ Not Implemented |
-| **Backend Peer Score Isolation** | T2 | Defined (HTTP 401/403) | ❌ Not Implemented |
+| **Backend Peer Score Isolation** | T2 | Defined (HTTP 401/403) | 🔧 Scaffolded (403 on peer access) |
 | **Organizer Progress Dashboard** | T2 | Defined | ❌ Not Implemented |
 | **Z-Score Normalization Engine** | T2 | Mathematically Defined | ❌ Not Implemented |
-| **CSV Scorecard Export** | T2 | Schema Defined | ❌ Not Implemented |
+| **CSV Scorecard Export** | T2 | Schema Defined | 🔧 Route stub returns CSV header |
+| **Docker Compose** | — | Required | ✅ Implemented |
 | **Community Voting & Comments** | T3 | Designed | ❌ Not Implemented |
 | **Anti-Abuse Rate Limiting** | T3 | Designed | ❌ Not Implemented |
 | **Public REST API & Webhooks** | T4 | Designed | ❌ Not Implemented |
 | **Verifiable Judge Credentials** | T4 | Designed | ❌ Not Implemented |
 
-**Summary**: Currently **0 of 4 tiers** are verified in code. The repository is in active development. All architecture, mathematical models, and role isolation boundaries are fully specified.
+**Summary**: Currently **0 of 4 tiers** are verified by `run.py`. Project scaffold is in place with Express server, SQLite database, auth middleware, and route stubs. Active development underway toward T1 and T2 completion.

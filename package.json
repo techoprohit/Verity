@@ -1,0 +1,18 @@
+{
+  "name": "verity",
+  "version": "1.0.0",
+  "description": "Verity - DOGFOOD 2026 Hackathon Submission & Judging Platform",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node tests/normalization.test.js",
+    "test:integration": "node tests/isolation.test.js",
+    "test:all": "node tests/normalization.test.js && node tests/isolation.test.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "express": "^4.21.0"
+  },
+  "license": "MIT"
+}
