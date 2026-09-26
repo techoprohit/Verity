@@ -6,9 +6,12 @@
 export async function renderGallery() {
     return `
         <div class="df-header-block">
-            <div>
-                <h2>Public Gallery</h2>
-                <p class="text-muted">Browse verified project submissions across all hackathon tracks.</p>
+            <div class="df-section-title-wrap">
+                <span class="df-ordinal">01</span>
+                <div>
+                    <h2>Public Gallery</h2>
+                    <p class="text-muted">Browse verified project submissions across all hackathon tracks.</p>
+                </div>
             </div>
             <div>
                 <span class="df-tag" id="gallery-count">[ 0 ENTRIES ]</span>

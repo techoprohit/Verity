@@ -7,9 +7,12 @@
 export async function renderConsole() {
     return `
         <div class="df-header-block">
-            <div>
-                <h2>Organizer Console</h2>
-                <p class="text-muted">Live event telemetry, cross-judge normalization rankings, and governance controls.</p>
+            <div class="df-section-title-wrap">
+                <span class="df-ordinal">04</span>
+                <div>
+                    <h2>Organizer Console</h2>
+                    <p class="text-muted">Live event telemetry, cross-judge normalization rankings, and governance controls.</p>
+                </div>
             </div>
             <div>
                 <span class="df-tag" id="org-role-badge">[ AUTH: VERIFYING... ]</span>

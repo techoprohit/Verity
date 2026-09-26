@@ -7,6 +7,7 @@ import { renderGallery, initGallery } from './views/gallery.js';
 import { renderSubmit, initSubmit } from './views/submit.js';
 import { renderJudge, initJudge } from './views/judge.js';
 import { renderConsole, initConsole } from './views/console.js';
+import { renderTools, initTools } from './views/tools.js';
 
 // Route Definitions
 const views = {
@@ -29,6 +30,11 @@ const views = {
         render: renderConsole,
         init: initConsole,
         title: 'VERITY // ORGANIZER CONSOLE'
+    },
+    '/tools': {
+        render: renderTools,
+        init: initTools,
+        title: 'VERITY // DEVELOPER TOOLS & CERTIFICATES'
     }
 };
 
@@ -168,6 +174,34 @@ function initApp() {
         updateRoleBadge(match[1]);
     } else {
         updateRoleBadge('visitor');
+    }
+
+    // Setup Theme Switcher
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeText = document.getElementById('theme-text');
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        try { localStorage.setItem('verity-theme', theme); } catch (e) {}
+        if (theme === 'light') {
+            if (themeIcon) themeIcon.textContent = '☀️';
+            if (themeText) themeText.textContent = 'LIGHT';
+        } else {
+            if (themeIcon) themeIcon.textContent = '🌙';
+            if (themeText) themeText.textContent = 'DARK';
+        }
+    }
+
+    let savedTheme = 'dark';
+    try { savedTheme = localStorage.getItem('verity-theme') || 'dark'; } catch (e) {}
+    applyTheme(savedTheme);
+
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        });
     }
 
     // Initial render

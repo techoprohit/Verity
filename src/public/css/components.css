@@ -1,18 +1,25 @@
-/* Verity Component Styles — High Density Technical Industrialism */
+/* Verity Component Styles — High Readability Editorial & Engineering System */
 
-/* Typography & Layout Extensions */
+/* Typography & Header Extensions */
 .df-header-block {
     margin-bottom: var(--sp-6);
     padding-bottom: var(--sp-4);
-    border-bottom: var(--border-hairline);
+    border-bottom: 1px solid var(--border-subtle);
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     flex-wrap: wrap;
     gap: var(--sp-4);
 }
+
+.df-section-title-wrap {
+    display: flex;
+    align-items: center;
+}
+
 .df-header-block h2 {
-    margin-bottom: var(--sp-1);
+    margin-bottom: 2px;
+    color: var(--text-primary);
 }
 
 /* Forms & Inputs */
@@ -20,21 +27,22 @@
     background-color: var(--surface-base);
     border: 1px solid var(--border-default);
     color: var(--text-primary);
-    font-family: var(--font-mono);
-    padding: var(--sp-2) var(--sp-3);
-    height: 38px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: var(--sp-2) var(--sp-4);
+    height: 42px;
     width: 100%;
     border-radius: var(--radius-sm);
-    transition: all 120ms linear;
+    transition: all 120ms ease;
     box-sizing: border-box;
 }
 .df-input:focus {
     outline: none;
-    border-color: var(--brand-cyan);
-    box-shadow: 0 0 0 1px var(--brand-cyan);
+    border-color: var(--brand-lime);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
 }
 .df-input:disabled {
-    background-color: #080C18;
+    background-color: var(--surface-raised);
     color: var(--text-dim);
     border-color: var(--border-subtle);
     cursor: not-allowed;
@@ -42,20 +50,22 @@
 
 textarea.df-input {
     height: auto;
-    min-height: 80px;
+    min-height: 90px;
     resize: vertical;
+    line-height: 1.5;
 }
 
-/* Filter Bar & Pills */
+/* Filter Bar & Track Navigation */
 .df-filter-bar {
     display: flex;
     flex-direction: column;
     gap: var(--sp-4);
     margin-bottom: var(--sp-8);
-    background-color: rgba(14, 20, 40, 0.6);
-    border: 1px solid var(--border-subtle);
-    padding: var(--sp-4);
-    border-radius: var(--radius-sm);
+    background-color: var(--surface-base);
+    border: 1px solid var(--border-default);
+    padding: var(--sp-5);
+    border-radius: var(--radius-md);
+    box-shadow: var(--card-shadow);
 }
 
 .df-filter-top {
@@ -69,8 +79,8 @@ textarea.df-input {
 .df-search-wrap {
     position: relative;
     flex: 1;
-    min-width: 260px;
-    max-width: 440px;
+    min-width: 280px;
+    max-width: 480px;
 }
 
 .df-track-strip {
@@ -90,28 +100,29 @@ textarea.df-input {
     background-color: var(--surface-base);
     border: 1px solid var(--border-default);
     color: var(--text-secondary);
-    font-family: var(--font-mono);
-    font-size: 11px;
+    font-family: var(--font-body);
+    font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.02em;
     cursor: pointer;
-    padding: 6px 12px;
+    padding: 7px 14px;
     border-radius: var(--radius-sm);
-    transition: all 120ms linear;
+    transition: all 120ms ease;
     white-space: nowrap;
 }
 .df-pill:hover {
-    border-color: var(--brand-cyan);
+    border-color: var(--brand-lime);
     color: var(--text-primary);
+    background-color: var(--surface-hover);
 }
 .df-pill.active {
-    background-color: #0E2436;
-    border-color: var(--brand-cyan);
-    color: var(--brand-cyan);
-    box-shadow: 0 0 8px rgba(0, 229, 208, 0.2);
+    background-color: rgba(34, 197, 94, 0.15);
+    border-color: var(--brand-lime);
+    color: var(--brand-lime);
+    font-weight: 700;
 }
 
-/* Grid System */
+/* Responsive Project Grid */
 .df-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -121,15 +132,16 @@ textarea.df-input {
 @media (min-width: 1024px) { .df-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 1360px) { .df-grid { grid-template-columns: repeat(4, 1fr); } }
 
-/* Project Cards */
+/* Project Submission Cards */
 .df-card {
     background-color: var(--surface-base);
     border: 1px solid var(--border-default);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     display: flex;
     flex-direction: column;
-    min-height: 220px;
-    transition: all 120ms linear;
+    min-height: 230px;
+    box-shadow: var(--card-shadow);
+    transition: all 150ms ease;
 }
 .df-card:hover {
     border-color: var(--border-strong);
@@ -138,46 +150,51 @@ textarea.df-input {
     cursor: pointer;
 }
 .df-card.interactive:hover {
-    border-color: var(--brand-cyan);
+    border-color: var(--brand-lime);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 .df-card__header {
-    padding: var(--sp-3) var(--sp-4);
+    padding: var(--sp-3) var(--sp-5);
     border-bottom: 1px solid var(--border-subtle);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: rgba(255, 255, 255, 0.02);
 }
 .df-card__body {
-    padding: var(--sp-4);
+    padding: var(--sp-5);
     flex-grow: 1;
 }
 .df-card__body h3 {
     margin-bottom: var(--sp-2);
-    font-size: 16px;
+    font-size: 18px;
+    color: var(--text-primary);
+    font-weight: 700;
 }
 .df-card__body p {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text-secondary);
-    line-height: 1.4;
+    line-height: 1.55;
+    margin-bottom: 0;
 }
 .df-card__footer {
-    padding: var(--sp-3) var(--sp-4);
+    padding: var(--sp-3) var(--sp-5);
     border-top: 1px solid var(--border-subtle);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 11px;
+    font-size: 13px;
+    color: var(--text-muted);
+    background-color: rgba(255, 255, 255, 0.01);
 }
 .df-link {
-    color: var(--brand-cyan);
+    color: var(--brand-lime);
     text-decoration: none;
-    font-family: var(--font-mono);
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 12px;
 }
 .df-link:hover {
-    color: var(--text-primary);
     text-decoration: underline;
 }
 
@@ -188,8 +205,8 @@ textarea.df-input {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(7, 10, 20, 0.85);
-    backdrop-filter: blur(4px);
+    background-color: rgba(11, 15, 23, 0.85);
+    backdrop-filter: blur(6px);
     z-index: 300;
     display: flex;
     align-items: center;
@@ -198,28 +215,29 @@ textarea.df-input {
 }
 .df-modal {
     background-color: var(--surface-base);
-    border: 1px solid var(--brand-cyan);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 229, 208, 0.15);
-    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    border-radius: var(--radius-md);
     width: 100%;
-    max-width: 640px;
+    max-width: 680px;
     max-height: 90vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
 }
 .df-modal__header {
-    padding: var(--sp-4) var(--sp-6);
+    padding: var(--sp-5) var(--sp-6);
     border-bottom: 1px solid var(--border-subtle);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: var(--surface-raised);
 }
 .df-modal__body {
     padding: var(--sp-6);
     display: flex;
     flex-direction: column;
-    gap: var(--sp-4);
+    gap: var(--sp-5);
 }
 .df-modal__footer {
     padding: var(--sp-4) var(--sp-6);
@@ -227,6 +245,7 @@ textarea.df-input {
     display: flex;
     justify-content: flex-end;
     gap: var(--sp-3);
+    background-color: var(--surface-raised);
 }
 
 /* Split View for Judging Console */
@@ -235,7 +254,7 @@ textarea.df-input {
     grid-template-columns: 1fr;
     gap: var(--sp-6);
 }
-@media (min-width: 900px) {
+@media (min-width: 960px) {
     .df-split {
         grid-template-columns: 1fr 1fr;
     }
@@ -249,33 +268,33 @@ textarea.df-input {
 }
 .df-stepper-btn {
     flex: 1;
-    height: 38px;
+    height: 42px;
     background-color: var(--surface-raised);
     border: 1px solid var(--border-default);
-    color: var(--text-secondary);
-    font-family: var(--font-mono);
-    font-size: 13px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 15px;
     font-weight: 700;
     cursor: pointer;
     border-radius: var(--radius-sm);
-    transition: all 100ms linear;
+    transition: all 120ms ease;
 }
 .df-stepper-btn:hover {
-    border-color: var(--brand-cyan);
-    color: var(--text-primary);
+    border-color: var(--brand-lime);
+    color: var(--brand-lime);
 }
 .df-stepper-btn.selected {
-    background-color: var(--brand-cyan);
-    border-color: var(--brand-cyan);
-    color: var(--bg-void);
-    box-shadow: 0 0 10px rgba(0, 229, 208, 0.4);
+    background-color: var(--brand-lime);
+    border-color: var(--brand-lime);
+    color: #0B0F17;
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
 }
 
 /* Live Score Meter */
 .df-score-meter {
     background-color: var(--surface-raised);
-    border: 1px solid var(--border-subtle);
-    padding: var(--sp-3) var(--sp-4);
+    border: 1px solid var(--border-default);
+    padding: var(--sp-4);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -285,52 +304,56 @@ textarea.df-input {
 /* Metrics Dashboard Grid */
 .df-metrics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--sp-4);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--sp-5);
     margin-bottom: var(--sp-8);
 }
 .df-metric-card {
     background-color: var(--surface-base);
     border: 1px solid var(--border-default);
-    padding: var(--sp-4) var(--sp-5);
-    border-radius: var(--radius-sm);
+    padding: var(--sp-5);
+    border-radius: var(--radius-md);
+    box-shadow: var(--card-shadow);
     display: flex;
     flex-direction: column;
-    gap: var(--sp-1);
+    gap: 4px;
 }
 .df-metric-card .value {
     font-family: var(--font-display);
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 800;
-    color: var(--brand-cyan);
+    color: var(--brand-lime);
+    line-height: 1.1;
+    margin: 4px 0;
 }
 
-/* Tables */
+/* High Contrast Data Tables */
 .df-table-container {
     overflow-x: auto;
     border: 1px solid var(--border-default);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background-color: var(--surface-base);
+    box-shadow: var(--card-shadow);
 }
 .df-table {
     width: 100%;
     border-collapse: collapse;
-    font-family: var(--font-mono);
-    font-size: 12px;
+    font-family: var(--font-body);
+    font-size: 14px;
     text-align: left;
 }
 .df-table th {
     background-color: var(--surface-raised);
     color: var(--text-muted);
     font-weight: 700;
-    padding: var(--sp-3) var(--sp-4);
-    border-bottom: 1px solid var(--border-subtle);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-default);
     text-transform: uppercase;
-    font-size: 11px;
-    letter-spacing: 0.08em;
+    font-size: 12px;
+    letter-spacing: 0.05em;
 }
 .df-table td {
-    padding: var(--sp-3) var(--sp-4);
+    padding: 14px 16px;
     border-bottom: 1px solid var(--border-subtle);
     color: var(--text-secondary);
 }
@@ -338,7 +361,7 @@ textarea.df-input {
     border-bottom: none;
 }
 .df-table tr:hover td {
-    background-color: rgba(22, 32, 58, 0.4);
+    background-color: var(--surface-hover);
     color: var(--text-primary);
 }
 
@@ -347,13 +370,13 @@ textarea.df-input {
     width: 100%;
     height: 8px;
     background-color: var(--surface-raised);
-    border-radius: 2px;
+    border-radius: 4px;
     overflow: hidden;
-    margin-top: 4px;
+    margin-top: 6px;
 }
 .df-progress-fill {
     height: 100%;
-    background-color: var(--brand-cyan);
+    background-color: var(--brand-lime);
     transition: width 200ms ease;
 }
 
@@ -362,11 +385,12 @@ textarea.df-input {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgba(19, 28, 54, 0.7);
-    border: 1px dashed var(--brand-cyan);
-    padding: var(--sp-3) var(--sp-4);
-    border-radius: var(--radius-sm);
+    background-color: var(--surface-raised);
+    border: 1px solid var(--border-default);
+    padding: var(--sp-4);
+    border-radius: var(--radius-md);
     margin-bottom: var(--sp-6);
     flex-wrap: wrap;
-    gap: var(--sp-2);
+    gap: var(--sp-3);
+    box-shadow: var(--card-shadow);
 }
