@@ -9,6 +9,9 @@ const galleryRoutes = require('./routes/gallery');
 const submissionRoutes = require('./routes/submissions');
 const judgingRoutes = require('./routes/judging');
 const organizerRoutes = require('./routes/organizer');
+const authRoutes = require('./routes/auth');
+const eventsRoutes = require('./routes/events');
+const teamsRoutes = require('./routes/teams');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -24,6 +27,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(authMiddleware);
 
 // Mount route controllers
+app.use('/', authRoutes);          // POST /api/auth/login, POST /api/auth/logout
+app.use('/', eventsRoutes);        // POST /api/events, POST /api/tracks, POST /api/prizes
+app.use('/', teamsRoutes);         // POST /api/teams, POST /api/teams/join
 app.use('/', galleryRoutes);       // GET /projects, GET /projects/:id
 app.use('/', submissionRoutes);    // POST /projects/new
 app.use('/', judgingRoutes);       // GET/POST /api/judge/scores
