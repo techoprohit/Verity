@@ -104,7 +104,12 @@ export async function initLogin() {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Authentication failed');
-            window.location.href = '/';
+            
+            const userRole = data.user.role;
+            if (userRole === 'judge') window.location.href = '/judge';
+            else if (userRole === 'organizer' || userRole === 'admin') window.location.href = '/console';
+            else if (userRole === 'participant') window.location.href = '/submit';
+            else window.location.href = '/';
         } catch (err) {
             errBox.textContent = err.message;
             errBox.style.display = 'block';
@@ -129,7 +134,12 @@ export async function initLogin() {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Registration failed');
-            window.location.href = '/';
+            
+            const userRole = data.user.role;
+            if (userRole === 'judge') window.location.href = '/judge';
+            else if (userRole === 'organizer' || userRole === 'admin') window.location.href = '/console';
+            else if (userRole === 'participant') window.location.href = '/submit';
+            else window.location.href = '/';
         } catch (err) {
             errBox.textContent = err.message;
             errBox.style.display = 'block';

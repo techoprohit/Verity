@@ -58,6 +58,25 @@ async function router() {
     const root = document.getElementById('app-root');
     const path = location.pathname;
     
+    // Client-side Route Guard
+    const user = await fetchSession();
+    const roleRequirements = {
+        '/submit': ['participant'],
+        '/judge': ['judge', 'organizer', 'admin'],
+        '/console': ['organizer', 'admin'],
+        '/tools': ['organizer', 'admin']
+    };
+
+    if (roleRequirements[path]) {
+        if (!user || !roleRequirements[path].includes(user.role)) {
+            // Unauthorized or unauthenticated - redirect to gallery
+            if (path !== '/') {
+                history.pushState(null, null, '/');
+                return router();
+            }
+        }
+    }
+    
     // Find view or default to 404
     const view = views[path] || { 
         render: async () => `
