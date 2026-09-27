@@ -90,7 +90,88 @@ export async function initConsole() {
             console.error('Audit logs load error:', e);
         }
 
+        const hasEvent = !!dashboardData.event;
+
+        let eventConfigHTML = '';
+        if (!hasEvent) {
+            eventConfigHTML = `
+                <div class="df-card" style="margin-bottom: var(--sp-12);">
+                    <div class="df-card__header">
+                        <h3 style="margin:0; color: var(--brand-accent);">[ SYSTEM: NO EVENT CONFIGURED ]</h3>
+                    </div>
+                    <div class="df-card__body">
+                        <p class="text-muted" style="margin-bottom: var(--sp-6);">You must initialize an event before participants can submit projects or teams can be formed.</p>
+                        <form id="form-create-event">
+                            <div class="df-form-group">
+                                <label>Event Name</label>
+                                <input type="text" id="event-name" class="df-input" placeholder="e.g. Dogfood 2026" required>
+                            </div>
+                            <div class="df-form-group" style="margin-top: var(--sp-4);">
+                                <label>Submissions Close (UTC)</label>
+                                <input type="datetime-local" id="event-close" class="df-input" required>
+                            </div>
+                            <div style="margin-top: var(--sp-6);">
+                                <button type="submit" class="btn-primary">INITIALIZE EVENT</button>
+                            </div>
+                            <div id="event-error" class="text-error text-small" style="margin-top: var(--sp-2); display: none;"></div>
+                        </form>
+                    </div>
+                </div>
+            `;
+        } else {
+            eventConfigHTML = `
+                <div class="df-card" style="margin-bottom: var(--sp-12);">
+                    <div class="df-card__header">
+                        <h3 style="margin:0; color: var(--brand-accent);">[ EVENT CONFIGURATION: ${escapeHtml(dashboardData.event.name.toUpperCase())} ]</h3>
+                    </div>
+                    <div class="df-card__body">
+                        <div style="display: flex; gap: var(--sp-8); flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 300px;">
+                                <h4 style="margin-top:0;">Tracks (${dashboardData.tracks.length})</h4>
+                                <ul style="list-style: none; padding: 0; margin-bottom: var(--sp-4);">
+                                    ${dashboardData.tracks.map(t => `<li style="margin-bottom: 4px;"><span class="df-tag">${escapeHtml(t.name)}</span></li>`).join('')}
+                                    ${dashboardData.tracks.length === 0 ? '<li class="text-muted text-small">No tracks created.</li>' : ''}
+                                </ul>
+                                <form id="form-create-track">
+                                    <div class="df-form-group">
+                                        <input type="text" id="track-name" class="df-input" placeholder="Track Name (e.g. Core)" required style="margin-bottom: 8px;">
+                                        <button type="submit" class="btn-secondary" style="width: 100%;">ADD TRACK</button>
+                                    </div>
+                                    <div id="track-error" class="text-error text-small" style="display: none;"></div>
+                                </form>
+                            </div>
+                            <div style="flex: 1; min-width: 300px;">
+                                <h4 style="margin-top:0;">Prizes (${dashboardData.prizes.length})</h4>
+                                <ul style="list-style: none; padding: 0; margin-bottom: var(--sp-4);">
+                                    ${dashboardData.prizes.map(p => {
+                                        const trackName = dashboardData.tracks.find(t => t.id === p.track_id)?.name || 'Global';
+                                        return `<li style="margin-bottom: 4px;"><span class="df-tag">${escapeHtml(p.name)} ($${p.amount})</span> <span class="text-small text-muted">Track: ${escapeHtml(trackName)}</span></li>`;
+                                    }).join('')}
+                                    ${dashboardData.prizes.length === 0 ? '<li class="text-muted text-small">No prizes configured.</li>' : ''}
+                                </ul>
+                                <form id="form-create-prize">
+                                    <div class="df-form-group">
+                                        <input type="text" id="prize-name" class="df-input" placeholder="Prize Name" required style="margin-bottom: 8px;">
+                                        <input type="number" id="prize-amount" class="df-input" placeholder="Amount (e.g. 5000)" required style="margin-bottom: 8px;">
+                                        <select id="prize-track" class="df-input" style="margin-bottom: 8px;">
+                                            <option value="">Global Prize (No specific track)</option>
+                                            ${dashboardData.tracks.map(t => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('')}
+                                        </select>
+                                        <button type="submit" class="btn-secondary" style="width: 100%;">ADD PRIZE</button>
+                                    </div>
+                                    <div id="prize-error" class="text-error text-small" style="display: none;"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         container.innerHTML = `
+            ${eventConfigHTML}
+            
+            ${hasEvent ? `
             <!-- Operational Action Strip -->
             <div class="df-dev-banner" style="margin-bottom: var(--sp-8);">
                 <div style="display: flex; align-items: center; gap: var(--sp-3);">
@@ -276,6 +357,7 @@ export async function initConsole() {
                     </table>
                 </div>
             </div>
+            ` : ''}
         `;
 
         // Toggle Deadline Button Listener
@@ -300,6 +382,88 @@ export async function initConsole() {
                 } catch (e) {
                     alert('Error: ' + e.message);
                     toggleBtn.disabled = false;
+                }
+            });
+        }
+
+        // Event Configuration Listeners
+        const formEvent = document.getElementById('form-create-event');
+        if (formEvent) {
+            formEvent.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button');
+                const errBox = document.getElementById('event-error');
+                btn.disabled = true;
+                errBox.style.display = 'none';
+                try {
+                    const name = document.getElementById('event-name').value;
+                    const closeDate = new Date(document.getElementById('event-close').value).toISOString();
+                    const res = await fetch('/api/events', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, submissions_close: closeDate })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Failed to create event');
+                    initConsole();
+                } catch (e) {
+                    errBox.textContent = e.message;
+                    errBox.style.display = 'block';
+                    btn.disabled = false;
+                }
+            });
+        }
+
+        const formTrack = document.getElementById('form-create-track');
+        if (formTrack) {
+            formTrack.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button');
+                const errBox = document.getElementById('track-error');
+                btn.disabled = true;
+                errBox.style.display = 'none';
+                try {
+                    const name = document.getElementById('track-name').value;
+                    const res = await fetch('/api/tracks', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, description: '' })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Failed to create track');
+                    initConsole();
+                } catch (e) {
+                    errBox.textContent = e.message;
+                    errBox.style.display = 'block';
+                    btn.disabled = false;
+                }
+            });
+        }
+
+        const formPrize = document.getElementById('form-create-prize');
+        if (formPrize) {
+            formPrize.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button');
+                const errBox = document.getElementById('prize-error');
+                btn.disabled = true;
+                errBox.style.display = 'none';
+                try {
+                    const name = document.getElementById('prize-name').value;
+                    const amount = document.getElementById('prize-amount').value;
+                    const track_id = document.getElementById('prize-track').value || null;
+                    const res = await fetch('/api/prizes', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, amount, track_id })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Failed to create prize');
+                    initConsole();
+                } catch (e) {
+                    errBox.textContent = e.message;
+                    errBox.style.display = 'block';
+                    btn.disabled = false;
                 }
             });
         }
