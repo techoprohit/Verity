@@ -91,6 +91,10 @@ router.get('/api/export.csv', requireOrganizer, (req, res) => {
 // GET /api/dashboard — Organizer progress dashboard data
 router.get('/api/dashboard', requireOrganizer, (req, res) => {
     try {
+        const event = db.prepare(`SELECT * FROM events LIMIT 1`).get();
+        const tracks = event ? db.prepare(`SELECT * FROM tracks WHERE event_id = ?`).all(event.id) : [];
+        const prizes = event ? db.prepare(`SELECT * FROM prizes WHERE event_id = ?`).all(event.id) : [];
+        
         const totalProjects = db.prepare(`SELECT COUNT(*) as count FROM projects WHERE status = 'submitted'`).get().count;
         const totalJudges = db.prepare(`SELECT COUNT(*) as count FROM users WHERE role = 'judge'`).get().count;
         const totalScores = db.prepare(`SELECT COUNT(*) as count FROM scores`).get().count;
@@ -108,6 +112,9 @@ router.get('/api/dashboard', requireOrganizer, (req, res) => {
         `).all();
 
         res.json({
+            event,
+            tracks,
+            prizes,
             totalProjects,
             totalJudges,
             totalScores,
