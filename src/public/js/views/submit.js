@@ -62,13 +62,93 @@ export async function initSubmit() {
         
         if (!data.hasTeam) {
             container.innerHTML = `
-                <div class="df-card" style="border-color: var(--color-warning);">
+                <div class="df-card" style="border-color: var(--brand-accent); margin-bottom: var(--sp-6);">
+                    <div class="df-card__header">
+                        <span class="df-tag">[ JOIN EXISTING TEAM ]</span>
+                    </div>
                     <div class="df-card__body">
-                        <h3 style="color: var(--color-warning)">[ NO TEAM MEMBERSHIP FOUND ]</h3>
-                        <p class="text-muted">You are not registered in any team. Every hackathon project must be linked to a verified team.</p>
+                        <p class="text-muted" style="margin-bottom: var(--sp-4);">If your teammates have already created a team, ask them for the <strong>Team Invite Code</strong>.</p>
+                        <form id="join-team-form" style="display: flex; gap: var(--sp-3); align-items: flex-end; flex-wrap: wrap;">
+                            <div style="flex-grow: 1; min-width: 200px;">
+                                <label class="df-tag" style="display: block; margin-bottom: 6px;">INVITE CODE *</label>
+                                <input type="text" id="invite-code-input" class="df-input" placeholder="e.g. a1b2c3d4" required />
+                            </div>
+                            <button type="submit" class="btn-primary" id="join-btn" style="height: 48px;">[ JOIN TEAM ]</button>
+                        </form>
+                        <div id="join-msg" style="margin-top: var(--sp-3); font-size: 12px;"></div>
+                    </div>
+                </div>
+
+                <div class="df-card" style="border-color: var(--border-default);">
+                    <div class="df-card__header">
+                        <span class="df-tag">[ CREATE NEW TEAM ]</span>
+                    </div>
+                    <div class="df-card__body">
+                        <p class="text-muted" style="margin-bottom: var(--sp-4);">Start a new team and invite others to join your project.</p>
+                        <form id="create-team-form" style="display: flex; gap: var(--sp-3); align-items: flex-end; flex-wrap: wrap;">
+                            <div style="flex-grow: 1; min-width: 200px;">
+                                <label class="df-tag" style="display: block; margin-bottom: 6px;">TEAM NAME *</label>
+                                <input type="text" id="team-name-input" class="df-input" placeholder="e.g. Cyber Squad" required />
+                            </div>
+                            <button type="submit" class="btn-secondary" id="create-btn" style="height: 48px;">[ CREATE TEAM ]</button>
+                        </form>
+                        <div id="create-msg" style="margin-top: var(--sp-3); font-size: 12px;"></div>
                     </div>
                 </div>
             `;
+
+            // Join Team Logic
+            document.getElementById('join-team-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('join-btn');
+                const msg = document.getElementById('join-msg');
+                btn.disabled = true;
+                btn.textContent = '[ JOINING... ]';
+
+                try {
+                    const res = await fetch('/api/teams/join', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({ inviteCode: document.getElementById('invite-code-input').value.trim() })
+                    });
+                    const resData = await res.json();
+                    if (!res.ok) throw new Error(resData.error || 'Failed to join team');
+
+                    msg.innerHTML = `<div style="padding: var(--sp-2) var(--sp-3); background: rgba(0, 229, 163, 0.1); border: 1px solid var(--color-success); color: var(--color-success);">[ SUCCESS: ${resData.message} ] Reloading...</div>`;
+                    setTimeout(() => window.location.reload(), 1500);
+                } catch (err) {
+                    msg.innerHTML = `<div style="padding: var(--sp-2) var(--sp-3); background: rgba(255, 51, 75, 0.1); border: 1px solid var(--color-error); color: var(--color-error);">[ ERROR: ${err.message} ]</div>`;
+                    btn.disabled = false;
+                    btn.textContent = '[ JOIN TEAM ]';
+                }
+            });
+
+            // Create Team Logic
+            document.getElementById('create-team-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('create-btn');
+                const msg = document.getElementById('create-msg');
+                btn.disabled = true;
+                btn.textContent = '[ CREATING... ]';
+
+                try {
+                    const res = await fetch('/api/teams', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({ name: document.getElementById('team-name-input').value.trim() })
+                    });
+                    const resData = await res.json();
+                    if (!res.ok) throw new Error(resData.error || 'Failed to create team');
+
+                    msg.innerHTML = `<div style="padding: var(--sp-2) var(--sp-3); background: rgba(0, 229, 163, 0.1); border: 1px solid var(--color-success); color: var(--color-success);">[ SUCCESS: Team Created! Invite Code: ${resData.inviteCode} ] Reloading...</div>`;
+                    setTimeout(() => window.location.reload(), 1500);
+                } catch (err) {
+                    msg.innerHTML = `<div style="padding: var(--sp-2) var(--sp-3); background: rgba(255, 51, 75, 0.1); border: 1px solid var(--color-error); color: var(--color-error);">[ ERROR: ${err.message} ]</div>`;
+                    btn.disabled = false;
+                    btn.textContent = '[ CREATE TEAM ]';
+                }
+            });
+
             return;
         }
 

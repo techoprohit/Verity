@@ -49,7 +49,7 @@ export async function renderLogin() {
                         <li><a href="#" class="df-mock-login" data-email="organizer@verity.local">Organizer</a></li>
                         <li><a href="#" class="df-mock-login" data-email="tomas.varga@example.org">Judge A (Ada)</a></li>
                         <li><a href="#" class="df-mock-login" data-email="wei.lindqvist@example.org">Judge B (Peer)</a></li>
-                        <li><a href="#" class="df-mock-login" data-email="participant@verity.local">Participant</a></li>
+                        <li><a href="#" class="df-mock-login" data-email="priya1@example.org">Participant</a></li>
                     </ul>
                 </div>
             </div>
