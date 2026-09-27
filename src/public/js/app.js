@@ -8,6 +8,7 @@ import { renderSubmit, initSubmit } from './views/submit.js';
 import { renderJudge, initJudge } from './views/judge.js';
 import { renderConsole, initConsole } from './views/console.js';
 import { renderTools, initTools } from './views/tools.js';
+import { renderLogin, initLogin } from './views/login.js';
 
 // Route Definitions
 const views = {
@@ -35,6 +36,11 @@ const views = {
         render: renderTools,
         init: initTools,
         title: 'VERITY // DEVELOPER TOOLS & CERTIFICATES'
+    },
+    '/login': {
+        render: renderLogin,
+        init: initLogin,
+        title: 'VERITY // AUTHENTICATION'
     }
 };
 
@@ -98,40 +104,62 @@ async function router() {
 }
 
 // Session Management (Cookie Override for Testing)
-export function setRoleCookie(token) {
-    if (token === 'visitor') {
-        document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    } else {
-        document.cookie = `session=${token}; path=/`;
+export async function fetchSession() {
+    try {
+        const res = await fetch('/api/auth/me');
+        const data = await res.json();
+        return data.user;
+    } catch (err) {
+        console.error('Failed to fetch session', err);
+        return null;
     }
-    updateRoleBadge(token);
-    // Reload active view with the new role credentials
-    router();
 }
 
-function updateRoleBadge(token) {
+export async function updateNavbar(user) {
     const badge = document.getElementById('current-role-badge');
-    if (!badge) return;
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    
+    // Nav Links
+    const navGallery = document.getElementById('nav-gallery');
+    const navSubmit = document.getElementById('nav-submit');
+    const navJudge = document.getElementById('nav-judge');
+    const navConsole = document.getElementById('nav-console');
+    const navTools = document.getElementById('nav-tools');
+    
+    // Reset defaults (only Gallery is visible everywhere)
+    if (navGallery) navGallery.style.display = 'inline-block';
+    if (navSubmit) navSubmit.style.display = 'none';
+    if (navJudge) navJudge.style.display = 'none';
+    if (navConsole) navConsole.style.display = 'none';
+    if (navTools) navTools.style.display = 'none';
 
-    const map = {
-        'org_7f2a': 'ORGANIZER',
-        'jdg_a_91bc': 'JUDGE A',
-        'jdg_b_44de': 'JUDGE B',
-        'prt_2e88': 'PARTICIPANT'
-    };
-
-    const roleName = map[token] || 'VISITOR';
-    badge.textContent = `ROLE: ${roleName}`;
-    if (token && token !== 'visitor') {
+    if (user) {
+        badge.textContent = `ROLE: ${user.role.toUpperCase()} (${user.name})`;
         badge.style.color = 'var(--brand-accent)';
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+        
+        if (user.role === 'participant') {
+            if (navSubmit) navSubmit.style.display = 'inline-block';
+        } else if (user.role === 'judge') {
+            if (navJudge) navJudge.style.display = 'inline-block';
+        } else if (user.role === 'organizer' || user.role === 'admin') {
+            if (navJudge) navJudge.style.display = 'inline-block';
+            if (navConsole) navConsole.style.display = 'inline-block';
+            if (navTools) navTools.style.display = 'inline-block';
+        }
     } else {
+        badge.textContent = 'VISITOR';
         badge.style.color = 'var(--text-muted)';
+        loginBtn.style.display = 'inline-block';
+        logoutBtn.style.display = 'none';
     }
 }
 
 // Initialize Application
-function initApp() {
-    // Intercept clicks on [data-link]
+async function initApp() {
+    // Handle global click interception for routing
     document.body.addEventListener('click', e => {
         const link = e.target.closest('[data-link]');
         if (link && link.href) {
@@ -143,38 +171,18 @@ function initApp() {
     // Handle browser back/forward buttons
     window.addEventListener('popstate', router);
 
-    // Setup Persona Switcher Drawer
-    const drawer = document.getElementById('persona-drawer');
-    const trigger = document.getElementById('session-trigger');
-    const closeBtn = document.getElementById('close-persona');
-
-    if (trigger && drawer) {
-        trigger.addEventListener('click', () => {
-            drawer.style.display = drawer.style.display === 'none' ? 'block' : 'none';
+    // Logout handling
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            window.location.href = '/'; // Reload completely to clear state
         });
     }
 
-    if (closeBtn && drawer) {
-        closeBtn.addEventListener('click', () => {
-            drawer.style.display = 'none';
-        });
-    }
-
-    document.querySelectorAll('.df-role-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const role = e.currentTarget.dataset.role;
-            setRoleCookie(role);
-            if (drawer) drawer.style.display = 'none';
-        });
-    });
-
-    // Detect existing cookie on load
-    const match = document.cookie.match(/session=([^;]+)/);
-    if (match) {
-        updateRoleBadge(match[1]);
-    } else {
-        updateRoleBadge('visitor');
-    }
+    // Check actual session state
+    const user = await fetchSession();
+    updateNavbar(user);
 
     // Initial render
     router();

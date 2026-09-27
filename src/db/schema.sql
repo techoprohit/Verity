@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS users (
     id          TEXT PRIMARY KEY,
     email       TEXT NOT NULL UNIQUE,
     name        TEXT NOT NULL,
+    password_hash TEXT,
     role        TEXT NOT NULL DEFAULT 'participant'
         CHECK(role IN ('visitor','participant','judge','organizer','admin')),
     created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))

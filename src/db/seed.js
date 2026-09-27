@@ -11,6 +11,12 @@ function generateId(prefix) {
     return `${prefix}_${crypto.randomBytes(4).toString('hex')}`;
 }
 
+function hashPassword(password) {
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = crypto.scryptSync(password, salt, 64).toString('hex');
+    return `${salt}:${hash}`;
+}
+
 function seedDatabase(db) {
     const fixturesPath = process.env.FIXTURES_PATH || path.join(__dirname, '../../fixtures.json');
 
@@ -24,6 +30,9 @@ function seedDatabase(db) {
 
     // Use a transaction for atomicity
     const seedTx = db.transaction(() => {
+        // Pre-compute default password hash for fixtures
+        const defaultPasswordHash = hashPassword('dogfood2026');
+
         // 1. Event
         const evt = fixtures.event;
         db.prepare(`
@@ -65,9 +74,9 @@ function seedDatabase(db) {
         // 4. Judges → users + sessions
         for (const judge of fixtures.judges) {
             db.prepare(`
-                INSERT OR IGNORE INTO users (id, email, name, role)
-                VALUES (?, ?, ?, 'judge')
-            `).run(judge.id, judge.email, judge.name);
+                INSERT OR IGNORE INTO users (id, email, name, password_hash, role)
+                VALUES (?, ?, ?, ?, 'judge')
+            `).run(judge.id, judge.email, judge.name, defaultPasswordHash);
 
             // Create judge assignments per track
             for (const trackId of judge.tracks) {
@@ -102,9 +111,9 @@ function seedDatabase(db) {
                     userId = existingUser.id;
                 } else {
                     db.prepare(`
-                        INSERT INTO users (id, email, name, role)
-                        VALUES (?, ?, ?, 'participant')
-                    `).run(desiredUserId, email, memberName);
+                        INSERT INTO users (id, email, name, password_hash, role)
+                        VALUES (?, ?, ?, ?, 'participant')
+                    `).run(desiredUserId, email, memberName, defaultPasswordHash);
                     userId = desiredUserId;
                 }
 
@@ -148,9 +157,9 @@ function seedDatabase(db) {
         // 8. Seed deterministic sessions for acceptance checker
         // Create an organizer user
         db.prepare(`
-            INSERT OR IGNORE INTO users (id, email, name, role)
-            VALUES ('org_01', 'organizer@verity.local', 'Verity Organizer', 'organizer')
-        `).run();
+            INSERT OR IGNORE INTO users (id, email, name, password_hash, role)
+            VALUES ('org_01', 'organizer@verity.local', 'Verity Organizer', ?, 'organizer')
+        `).run(defaultPasswordHash);
 
         // Map session tokens from .dogfood.toml
         const sessionMap = [

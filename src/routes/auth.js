@@ -8,30 +8,72 @@ const crypto = require('crypto');
 const db = require('../db/database');
 const { logAudit } = require('../audit/logger');
 
-// POST /api/auth/login - Create a session
+function hashPassword(password) {
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = crypto.scryptSync(password, salt, 64).toString('hex');
+    return `${salt}:${hash}`;
+}
+
+function verifyPassword(password, storedHash) {
+    if (!storedHash) return false;
+    const [salt, key] = storedHash.split(':');
+    const hash = crypto.scryptSync(password, salt, 64).toString('hex');
+    return key === hash;
+}
+
+// POST /api/auth/register
+router.post('/api/auth/register', (req, res) => {
+    const { email, name, password } = req.body;
+    if (!email || !name || !password) {
+        return res.status(400).json({ error: 'Email, name, and password are required' });
+    }
+
+    try {
+        const existing = db.prepare(`SELECT id FROM users WHERE email = ?`).get(email);
+        if (existing) {
+            return res.status(409).json({ error: 'Email is already registered' });
+        }
+
+        const userId = `usr_${crypto.randomBytes(4).toString('hex')}`;
+        const hashed = hashPassword(password);
+        const now = new Date().toISOString();
+
+        db.prepare(`
+            INSERT INTO users (id, email, name, password_hash, role, created_at)
+            VALUES (?, ?, ?, ?, 'participant', ?)
+        `).run(userId, email, name, hashed, now);
+
+        const token = crypto.randomBytes(16).toString('hex');
+        db.prepare(`
+            INSERT INTO sessions (token, user_id, created_at)
+            VALUES (?, ?, ?)
+        `).run(token, userId, now);
+
+        res.cookie('session', token, { httpOnly: true });
+        res.json({ message: 'Registered successfully', user: { id: userId, name, role: 'participant' } });
+    } catch (err) {
+        console.error('[auth] Error registering:', err.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// POST /api/auth/login
 router.post('/api/auth/login', (req, res) => {
-    const { email } = req.body;
+    const { email, password } = req.body;
     
-    if (!email) {
-        return res.status(400).json({ error: 'Email is required' });
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
     }
 
     try {
         let user = db.prepare(`SELECT * FROM users WHERE email = ?`).get(email);
-        const now = new Date().toISOString();
-
-        if (!user) {
-            // Auto-register as visitor for testing purposes
-            const userId = `usr_${crypto.randomBytes(4).toString('hex')}`;
-            db.prepare(`
-                INSERT INTO users (id, email, name, role, created_at)
-                VALUES (?, ?, ?, 'visitor', ?)
-            `).run(userId, email, email.split('@')[0], now);
-            
-            user = db.prepare(`SELECT * FROM users WHERE id = ?`).get(userId);
+        
+        if (!user || !verifyPassword(password, user.password_hash)) {
+            return res.status(401).json({ error: 'Invalid email or password' });
         }
 
         const token = crypto.randomBytes(16).toString('hex');
+        const now = new Date().toISOString();
         
         db.prepare(`
             INSERT INTO sessions (token, user_id, created_at)
@@ -61,6 +103,14 @@ router.post('/api/auth/logout', (req, res) => {
 
     res.clearCookie('session');
     res.json({ message: 'Logged out' });
+});
+
+// GET /api/auth/me - Get current user session
+router.get('/api/auth/me', (req, res) => {
+    if (!req.user) {
+        return res.json({ user: null });
+    }
+    res.json({ user: { id: req.user.id, name: req.user.name, role: req.user.role } });
 });
 
 module.exports = router;
