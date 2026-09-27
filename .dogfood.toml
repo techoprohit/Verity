@@ -2,7 +2,7 @@
 base_url = "http://localhost:8080"
 
 [tiers]
-claimed = ["T1", "T2"]
+claimed = ["T1", "T2", "T3"]
 pitch = "An open-source, self-hostable hackathon platform delivering weighted rubric scoring, mathematical cross-judge normalization, and strict backend-enforced role isolation in a single offline command."
 
 [auth]

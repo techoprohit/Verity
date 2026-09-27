@@ -9,6 +9,7 @@ import { renderJudge, initJudge } from './views/judge.js';
 import { renderConsole, initConsole } from './views/console.js';
 import { renderTools, initTools } from './views/tools.js';
 import { renderLogin, initLogin } from './views/login.js';
+import { renderBallot, initBallot } from './views/ballot.js';
 
 // Route Definitions
 const views = {
@@ -16,6 +17,11 @@ const views = {
         render: renderGallery,
         init: initGallery,
         title: 'VERITY // GALLERY'
+    },
+    '/ballot': {
+        render: renderBallot,
+        init: initBallot,
+        title: 'VERITY // BALLOT'
     },
     '/submit': {
         render: renderSubmit,
@@ -60,12 +66,6 @@ async function router() {
 
     // Client-side Route Guard
     const user = await fetchSession();
-
-    // Force unauthenticated users to the login page
-    if (!user && path !== '/login') {
-        history.pushState(null, null, '/login');
-        return router();
-    }
 
     const roleRequirements = {
         '/submit': ['participant'],
@@ -134,9 +134,11 @@ export async function fetchSession() {
     try {
         const res = await fetch('/api/auth/me');
         const data = await res.json();
+        window.VeritySession = data.user || null;
         return data.user;
     } catch (err) {
         console.error('Failed to fetch session', err);
+        window.VeritySession = null;
         return null;
     }
 }

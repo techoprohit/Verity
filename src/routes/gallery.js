@@ -106,4 +106,105 @@ router.get('/projects/:id', (req, res) => {
     }
 });
 
+const rateLimit = require('../middleware/rateLimit');
+const crypto = require('crypto');
+
+// GET /api/projects/:id/comments
+router.get('/api/projects/:id/comments', (req, res) => {
+    try {
+        const comments = db.prepare(`
+            SELECT c.id, c.content, c.created_at, c.voter_email, u.name as user_name
+            FROM project_comments c
+            LEFT JOIN users u ON c.user_id = u.id
+            WHERE c.project_id = ?
+            ORDER BY c.created_at DESC
+        `).all(req.params.id);
+        res.json(comments);
+    } catch (err) {
+        console.error('[gallery] Comments Error:', err.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// POST /api/projects/:id/comments
+router.post('/api/projects/:id/comments', rateLimit({ windowMs: 60000, max: 3, message: 'Too many comments, slow down.' }), (req, res) => {
+    const { content, voter_email } = req.body;
+    if (!content) return res.status(400).json({ error: 'Comment content is required' });
+
+    const user_id = req.user ? req.user.id : null;
+    if (!user_id && !voter_email) {
+        return res.status(400).json({ error: 'Must provide voter_email or be logged in' });
+    }
+
+    try {
+        const id = crypto.randomUUID();
+        db.prepare(`
+            INSERT INTO project_comments (id, project_id, user_id, voter_email, content)
+            VALUES (?, ?, ?, ?, ?)
+        `).run(id, req.params.id, user_id, voter_email || null, content);
+        
+        // Audit log
+        db.prepare(`
+            INSERT INTO audit_logs (id, actor_id, action, entity_type, entity_id, ip_address)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `).run(crypto.randomUUID(), user_id, 'post_comment', 'project', req.params.id, req.ip || '');
+
+        res.status(201).json({ success: true, id });
+    } catch (err) {
+        console.error('[gallery] Post Comment Error:', err.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// GET /api/ballot
+// Returns a randomized list of projects for community voting
+router.get('/api/ballot', (req, res) => {
+    try {
+        const projects = db.prepare(`
+            SELECT p.id, p.title, p.summary, t.name AS track_name, tm.name AS team_name
+            FROM projects p
+            JOIN tracks t ON p.track_id = t.id
+            JOIN teams tm ON p.team_id = tm.id
+            WHERE p.status = 'submitted'
+            ORDER BY RANDOM()
+        `).all();
+        res.json(projects);
+    } catch (err) {
+        console.error('[gallery] Ballot Error:', err.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// POST /api/vote
+router.post('/api/vote', rateLimit({ windowMs: 60000, max: 10, message: 'Too many votes, slow down.' }), (req, res) => {
+    const { project_id, voter_email } = req.body;
+    if (!project_id || !voter_email) return res.status(400).json({ error: 'project_id and voter_email required' });
+
+    try {
+        // Assume event ID is 'evt_dogfood2026' for hackathon context, or fetch it
+        const event = db.prepare(`SELECT id FROM events LIMIT 1`).get();
+        if (!event) return res.status(400).json({ error: 'No active event' });
+
+        const id = crypto.randomUUID();
+        db.prepare(`
+            INSERT INTO community_votes (id, event_id, voter_email, project_id)
+            VALUES (?, ?, ?, ?)
+        `).run(id, event.id, voter_email, project_id);
+
+        const user_id = req.user ? req.user.id : null;
+        db.prepare(`
+            INSERT INTO audit_logs (id, actor_id, action, entity_type, entity_id, ip_address)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `).run(crypto.randomUUID(), user_id, 'community_vote', 'project', project_id, req.ip || '');
+
+        res.json({ success: true });
+    } catch (err) {
+        if (err.message.includes('UNIQUE constraint failed')) {
+            return res.status(400).json({ error: 'You have already voted in this event.' });
+        }
+        console.error('[gallery] Vote Error:', err.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 module.exports = router;

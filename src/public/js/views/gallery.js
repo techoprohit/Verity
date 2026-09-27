@@ -251,6 +251,23 @@ export async function initGallery() {
                             <span class="df-tag">SUBMITTED TIMESTAMP</span>
                             <p style="margin-top: 4px; font-size: 11px;" class="text-muted">${p.submitted_at ? new Date(p.submitted_at).toUTCString() : 'N/A'}</p>
                         </div>
+                        
+                        <!-- Project Comments Section (T3) -->
+                        <div style="margin-top: var(--sp-6); border-top: 1px solid var(--border-color); padding-top: var(--sp-4);">
+                            <span class="df-tag">[ PUBLIC COMMENTS ]</span>
+                            <div id="comments-list" style="margin-top: var(--sp-4); max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: var(--sp-3);">
+                                <p class="text-muted" style="font-size: 12px;">Loading comments...</p>
+                            </div>
+                            
+                            <div style="margin-top: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-2);">
+                                <textarea id="comment-input" class="df-input" placeholder="Add a public comment..." rows="2" style="resize: none;"></textarea>
+                                <div style="display: flex; gap: var(--sp-2); align-items: center;">
+                                    <input type="email" id="comment-email" class="df-input" placeholder="Your email (if not logged in)" style="flex: 1; font-size: 11px;">
+                                    <button id="post-comment-btn" class="btn-primary" style="font-size: 11px; padding: 0 16px;">POST COMMENT</button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="df-modal__footer">
                         <button class="btn-secondary" id="modal-close-action">CLOSE DOSSIER</button>
@@ -269,6 +286,81 @@ export async function initGallery() {
         document.getElementById('modal-backdrop').addEventListener('click', (e) => {
             if (e.target.id === 'modal-backdrop') closeModal();
         });
+
+        // Initialize Comments Logic
+        const loadComments = async () => {
+            const list = document.getElementById('comments-list');
+            try {
+                const res = await fetch(`/api/projects/${p.id}/comments`);
+                if (!res.ok) throw new Error('Failed to load');
+                const comments = await res.json();
+                
+                if (comments.length === 0) {
+                    list.innerHTML = '<p class="text-muted" style="font-size: 12px;">No comments yet.</p>';
+                    return;
+                }
+                
+                list.innerHTML = comments.map(c => `
+                    <div style="background: var(--bg-secondary); padding: var(--sp-3); border-radius: var(--radius-sm); font-size: 13px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span style="font-weight: bold; color: var(--brand-accent);">${escapeHtml(c.user_name || c.voter_email || 'Anonymous')}</span>
+                            <span class="text-muted" style="font-size: 10px;">${new Date(c.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <p style="margin: 0; color: var(--text-primary);">${escapeHtml(c.content)}</p>
+                    </div>
+                `).join('');
+            } catch (err) {
+                list.innerHTML = `<p class="text-error" style="font-size: 12px;">${err.message}</p>`;
+            }
+        };
+
+        const setupCommentForm = () => {
+            const btn = document.getElementById('post-comment-btn');
+            const input = document.getElementById('comment-input');
+            const emailInput = document.getElementById('comment-email');
+            
+            const user = window.VeritySession;
+            if (user && user.email) {
+                emailInput.value = user.email;
+                emailInput.style.display = 'none';
+            }
+
+            btn.addEventListener('click', async () => {
+                const content = input.value.trim();
+                const email = emailInput.value.trim();
+                
+                if (!content) return;
+                if (!user && !email) {
+                    alert("Please provide an email to comment.");
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.textContent = 'POSTING...';
+
+                try {
+                    const res = await fetch(`/api/projects/${p.id}/comments`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content, voter_email: email })
+                    });
+                    
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Failed to post');
+                    
+                    input.value = '';
+                    await loadComments();
+                } catch (err) {
+                    alert(err.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'POST COMMENT';
+                }
+            });
+        };
+
+        loadComments();
+        setupCommentForm();
     }
 
     function escapeHtml(str) {

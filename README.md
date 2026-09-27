@@ -68,11 +68,11 @@ The DOGFOOD 2026 tier ladder defines the platform capability levels:
 ### T3: Public (Stretch)
 | Feature | Description | Status |
 | :--- | :--- | :--- |
-| **Community Voting** | Authenticated or email-gated voting for public choice awards | *Planned* |
-| **Project Comments** | Community feedback and discussion threads on project pages | *Planned* |
-| **Hidden Results Window** | Scoreboard and vote tallies concealed until the organizer publishes results | *Planned* |
-| **Randomized Ballot Ordering** | Position-bias mitigation through per-voter randomized project ordering | *Planned* |
-| **Anti-Abuse Safeguards** | Rate limiting, duplicate submission detection, and audit logging | *Planned* |
+| **Community Voting** | Authenticated or email-gated voting for public choice awards | ✅ Implemented |
+| **Project Comments** | Community feedback and discussion threads on project pages | ✅ Implemented |
+| **Hidden Results Window** | Scoreboard and vote tallies concealed until the organizer publishes results | ✅ Implemented |
+| **Randomized Ballot Ordering** | Position-bias mitigation through per-voter randomized project ordering | ✅ Implemented |
+| **Anti-Abuse Safeguards** | Rate limiting, duplicate submission detection, and audit logging | ✅ Implemented |
 
 ### T4: Stretch Capabilities
 | Feature | Description | Status |
@@ -103,12 +103,13 @@ The DOGFOOD 2026 tier ladder defines the platform capability levels:
 
 ## 7. Current Tier Claim
 
-> **Current Claimed Tier:** **T2 (Judging Phase)**
+> **Current Claimed Tier:** **T3 (Public Stretch)**
 
 In strict adherence to DOGFOOD rule #5 (*"Honest tier claims, declared in .dogfood.toml. Overclaiming is penalised"*):
 - The project scaffold is in place: Express server, SQLite database, auth middleware, route handlers, Docker deployment files.
 - The acceptance checker (`run.py`) successfully passes all probes for T1 and T2.
-- T1 and T2 are officially claimed and verified.
+- T3 Public features (Community Voting, Project Comments, Rate Limiting) are implemented and functional.
+- T1, T2, and T3 are officially claimed.
 
 ---
 
@@ -359,8 +360,8 @@ In the spirit of honest gap reporting and transparent development:
 1. **T1 (Core) & T2 (Judging Phase) 100% Complete**: All acceptance probes in `run.py` pass without error. Weighted scoring, Z-score normalization with Bessel's correction, peer isolation, and strict deadline gating are fully operational.
 2. **Complete Native Auth & Role Enforcement**: Endpoints use native Node `crypto.scryptSync` password hashing and SQLite session management. Client-side route guards and navigation filters isolate views based on authenticated role (`participant`, `judge`, `organizer`, `admin`, `visitor`).
 3. **Frontend SPA Complete**: Vanilla HTML/CSS/JS frontend located in `src/public/` with dedicated views for Gallery, Submission Portal, Judge Queue, Organizer Console, and Certificate Generator tools.
-4. **Community Voting & Comments (T3 Backlog)**: Public community choice voting, threaded project discussion, and vote tallies concealed until publish are designed and ready for implementation.
-5. **Anti-Abuse Rate Limiting (T3 Backlog)**: Sliding-window rate limiting and Sybil protection for public routes are designed and queued next.
+4. **Community Voting & Comments (T3 Completed)**: Public community choice voting on a randomized ballot, threaded project discussion on the Gallery modal, and vote tallies concealed until publish are fully implemented.
+5. **Anti-Abuse Rate Limiting (T3 Completed)**: Sliding-window rate limiting, duplicate voting detection, and audit logging are implemented on all public action routes.
 6. **Stretch Capabilities (T4 Backlog)**: Public REST API, outbound webhooks, and verifiable cryptographic credentials remain in the planned stretch roadmap.
 
 ---
@@ -474,9 +475,9 @@ Verity is open-source software licensed under the [MIT License](https://opensour
 | **Z-Score Normalization Engine** | T2 | Mathematically Defined | ✅ Implemented |
 | **CSV Scorecard Export** | T2 | Schema Defined | ✅ Implemented |
 | **Docker Compose** | — | Required | ✅ Implemented |
-| **Community Voting & Comments** | T3 | Designed | ❌ Not Implemented |
-| **Anti-Abuse Rate Limiting** | T3 | Designed | ❌ Not Implemented |
+| **Community Voting & Comments** | T3 | Designed | ✅ Implemented |
+| **Anti-Abuse Rate Limiting** | T3 | Designed | ✅ Implemented |
 | **Public REST API & Webhooks** | T4 | Designed | ❌ Not Implemented |
 | **Verifiable Judge Credentials** | T4 | Designed | ❌ Not Implemented |
 
-**Summary**: Currently **2 of 4 tiers** (T1 and T2) are fully verified by `run.py`. Active development is shifting towards T3/T4 stretch goals.
+**Summary**: Currently **3 of 4 tiers** (T1, T2, T3) are fully implemented. Active development is shifting towards T4 stretch goals.

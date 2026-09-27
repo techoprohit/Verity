@@ -157,6 +157,16 @@ CREATE TABLE IF NOT EXISTS community_votes (
     UNIQUE(event_id, voter_email)
 );
 
+-- 16. Project Comments (T3)
+CREATE TABLE IF NOT EXISTS project_comments (
+    id          TEXT PRIMARY KEY,
+    project_id  TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    user_id     TEXT REFERENCES users(id) ON DELETE SET NULL,
+    voter_email TEXT, -- In case non-users comment, or we link by email
+    content     TEXT NOT NULL,
+    created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+);
+
 -- Schema version tracking
 CREATE TABLE IF NOT EXISTS schema_migrations (
     version     INTEGER PRIMARY KEY,
