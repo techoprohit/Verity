@@ -107,7 +107,7 @@ router.post('/api/auth/logout', (req, res) => {
 
 // GET /api/auth/me - Get current user session
 router.get('/api/auth/me', (req, res) => {
-    if (!req.user) {
+    if (!req.user || req.user.role === 'visitor') {
         return res.json({ user: null });
     }
     res.json({ user: { id: req.user.id, name: req.user.name, role: req.user.role } });
