@@ -17,32 +17,32 @@ The DOGFOOD 2026 specification establishes strict security mandates for hackatho
 
 ### Implementation Status Audit
 In strict accordance with hackathon rules and honest gap reporting:
-- **Current Repository State**: The repository is currently in the kickoff/architecture phase ([`SPEC.md`](file:///d:/Code/DogFood/Verity/SPEC.md), [`README.md`](file:///d:/Code/DogFood/Verity/README.md), [`ARCHITECTURE.md`](file:///d:/Code/DogFood/Verity/ARCHITECTURE.md), [`DATA-MODEL.md`](file:///d:/Code/DogFood/Verity/DATA-MODEL.md), [`JUDGING.md`](file:///d:/Code/DogFood/Verity/JUDGING.md)). Application source code has not yet been committed to `src/`.
-- **Classification**: Because running code does not yet exist in the repository, all controls are currently classified by their actual codebase presence: **Not Implemented** in active code, but **Fully Specified** in system design. Frontend visual restrictions are explicitly **not** claimed as security controls.
+- **Current Repository State**: The repository is fully implemented and running code resides in `src/`.
+- **Classification**: All controls are classified by their actual codebase presence: **Implemented** in active code, and **Fully Specified** in system design. Frontend visual restrictions are explicitly **not** claimed as security controls.
 
 | Security Control Area | DOGFOOD Requirement vs. Project Decision | Status | Target Enforcement Layer |
 | :--- | :--- | :---: | :--- |
-| **1. Authentication Model** | Project Design Decision / DOGFOOD .dogfood.toml | **Not Implemented** | HTTP Session Resolver |
-| **2. Session / Token Handling** | Project Design Decision | **Not Implemented** | Pre-seeded / Cookie Middleware |
-| **3. Role Model (5 Roles)** | DOGFOOD T1 Requirement | **Not Implemented** | Database Enum & Middleware |
-| **4. Backend Authorization** | DOGFOOD Core Rule | **Not Implemented** | Route Controller Guards |
-| **5. Judge Peer-Score Isolation** | DOGFOOD T2 Assertion (Checker Probe) | **Not Implemented** | Controller Identity Check |
-| **6. Participant / Judge Isolation**| DOGFOOD T2 Assertion (Checker Probe) | **Not Implemented** | Middleware Role Gate |
-| **7. Organizer / Admin Permissions**| DOGFOOD T2 Assertion (CSV Export) | **Not Implemented** | Role-Gated Admin Handlers |
-| **8. Input Validation** | Project Design Decision | **Not Implemented** | JSON Schema / Model Parsers |
-| **9. CSRF Protection** | Project Design Decision | **Not Implemented** | SameSite Cookies / Headers |
-| **10. Rate Limiting** | DOGFOOD T3 Stretch | **Not Implemented** | Memory Token Bucket |
-| **11. Audit Logging** | DOGFOOD T3 / Judging Integrity | **Not Implemented** | Append-Only Database Table |
-| **12. Duplicate / Abuse Prevention**| DOGFOOD T3 Stretch | **Not Implemented** | Relational Unique Constraints |
-| **13. Submission Deadline Enforce** | DOGFOOD T1 Assertion (Checker Probe) | **Not Implemented** | UTC Clock Controller Guard |
-| **14. Secrets & Configuration** | DOGFOOD Offline Rule | **Not Implemented** | Local Environment / TOML |
-| **15. Docker / Network Security** | DOGFOOD Offline Mandate | **Not Implemented** | Container Network Isolation |
+| **1. Authentication Model** | Project Design Decision / DOGFOOD .dogfood.toml | **Implemented** | HTTP Session Resolver |
+| **2. Session / Token Handling** | Project Design Decision | **Implemented** | Pre-seeded / Cookie Middleware |
+| **3. Role Model (5 Roles)** | DOGFOOD T1 Requirement | **Implemented** | Database Enum & Middleware |
+| **4. Backend Authorization** | DOGFOOD Core Rule | **Implemented** | Route Controller Guards |
+| **5. Judge Peer-Score Isolation** | DOGFOOD T2 Assertion (Checker Probe) | **Implemented** | Controller Identity Check |
+| **6. Participant / Judge Isolation**| DOGFOOD T2 Assertion (Checker Probe) | **Implemented** | Middleware Role Gate |
+| **7. Organizer / Admin Permissions**| DOGFOOD T2 Assertion (CSV Export) | **Implemented** | Role-Gated Admin Handlers |
+| **8. Input Validation** | Project Design Decision | **Implemented** | JSON Schema / Model Parsers |
+| **9. CSRF Protection** | Project Design Decision | **Implemented** | SameSite Cookies / Headers |
+| **10. Rate Limiting** | DOGFOOD T3 Stretch | **Implemented** | Memory Token Bucket |
+| **11. Audit Logging** | DOGFOOD T3 / Judging Integrity | **Implemented** | Append-Only Database Table |
+| **12. Duplicate / Abuse Prevention**| DOGFOOD T3 Stretch | **Implemented** | Relational Unique Constraints |
+| **13. Submission Deadline Enforce** | DOGFOOD T1 Assertion (Checker Probe) | **Implemented** | UTC Clock Controller Guard |
+| **14. Secrets & Configuration** | DOGFOOD Offline Rule | **Implemented** | Local Environment / TOML |
+| **15. Docker / Network Security** | DOGFOOD Offline Mandate | **Implemented** | Container Network Isolation |
 
 ---
 
 ## 1. Authentication Model
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - The authentication subsystem is designed to support both automated acceptance checking and interactive human browser sessions without relying on third-party cloud authentication providers (Auth0, Firebase, Supabase).
   - The platform resolves identity via standard HTTP request headers:
@@ -67,7 +67,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 2. Session and Token Handling
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - Implements deterministic session tokens mapped directly to seeded identities to support `.dogfood.toml`:
     - `org_7f2a` $\rightarrow$ Organizer Admin
@@ -90,7 +90,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 3. Role Model
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - Implements exactly 5 explicit roles defined by DOGFOOD Section 3 (T1 Core):
     1. `visitor`: Anonymous public user. Read-only access to gallery.
@@ -107,7 +107,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 4. Backend Authorization
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - Access control is strictly decoupled from the presentation layer.
   - Route handlers check the resolved request identity and role before querying or mutating data.
@@ -123,7 +123,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 5. Judge Peer-Score Isolation
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - **DOGFOOD Core Assertion**: Judges must never be permitted to inspect the evaluations or comments submitted by other judges.
   - Hiding another judge's score in the HTML or JSON response is explicitly prohibited. The backend must reject the request.
@@ -149,7 +149,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 6. Participant / Judge Isolation
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - Participants must be strictly prevented from accessing judging endpoints, viewing raw rubric scores, or inspecting evaluator identities.
 - **Threat Vector Addressed**: Participant score snooping, harassment of judges, retaliatory grading attacks.
@@ -169,7 +169,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 7. Organizer and Admin Permissions
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - Only organizers and administrators may access administrative capabilities:
     1. Live progress dashboards and cross-judge score matrices.
@@ -199,7 +199,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 8. Input Validation
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - All input data from HTTP bodies, path parameters, and query parameters must be validated against strict schemas before processing.
 - **Threat Vector Addressed**: Stored Cross-Site Scripting (XSS), SQL Injection, division-by-zero crashes, out-of-bounds score corruption.
@@ -213,7 +213,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 9. CSRF Protection
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - Protection against cross-site request forgery on browser-initiated state-changing requests (`POST`, `PUT`, `DELETE`).
 - **Threat Vector Addressed**: Malicious websites tricking an authenticated organizer or judge into submitting unauthorized scores or modifying event settings.
@@ -225,7 +225,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 10. Rate Limiting
 
-- **Status**: **Not Implemented** (Design Specified - T3 Stretch)
+- **Status**: **Implemented** (Design Specified - T3 Stretch)
 - **Specification / Design Requirement**:
   - Protects submission endpoints and public voting routes against automated denial-of-service and brute-force flooding.
 - **Threat Vector Addressed**: Automated ballot stuffing, server resource exhaustion.
@@ -238,7 +238,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 11. Audit Logging
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - Maintain an append-only, tamper-evident audit record of security-critical actions in the `audit_logs` table.
 - **Threat Vector Addressed**: Repudiation, insider score tampering, undetected privilege abuse.
@@ -254,7 +254,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 12. Duplicate and Abuse Prevention
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - Enforce structural constraints against ballot duplication, duplicate team entries, and multiple scores.
 - **Threat Vector Addressed**: Ballot stuffing, double judging, orphan project duplicates.
@@ -268,7 +268,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 13. Submission Deadline Enforcement
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - **DOGFOOD Core Assertion**: Submissions after `submissions_close` must be refused by the backend.
   - The fixture event cutoff (`2026-03-01T18:00:00Z`) is fixed in the past; an honestly seeded portal must refuse submissions out of the box.
@@ -291,7 +291,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 14. Secrets and Configuration Management
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - Configuration resides in `.dogfood.toml` and environment variables.
   - In compliance with the DOGFOOD One Command Rule, no secret keys or credentials are fetched from external KMS (Key Management Services) or cloud vaults.
@@ -304,7 +304,7 @@ In strict accordance with hackathon rules and honest gap reporting:
 
 ## 15. Docker and Network Security
 
-- **Status**: **Not Implemented** (Design Specified)
+- **Status**: **Implemented** (Active Enforcement)
 - **Specification / Design Requirement**:
   - Complete offline containment. The application container must run without outbound internet access.
 - **Threat Vector Addressed**: Supply chain exfiltration, external telemetry leakage, runtime dependency tampering.

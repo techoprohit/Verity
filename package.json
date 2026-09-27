@@ -6,9 +6,13 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "test": "node tests/normalization.test.js",
-    "test:integration": "node tests/isolation.test.js",
-    "test:all": "node tests/normalization.test.js && node tests/isolation.test.js"
+    "test": "node tests/run-all.js",
+    "test:t1": "node tests/t1_core.test.js",
+    "test:t2": "node tests/t2_judging.test.js",
+    "test:t3": "node tests/t3_public.test.js",
+    "test:t4": "node tests/t4_stretch.test.js",
+    "test:unit": "node tests/normalization.test.js",
+    "test:isolation": "node tests/isolation.test.js"
   },
   "dependencies": {
     "better-sqlite3": "^11.3.0",

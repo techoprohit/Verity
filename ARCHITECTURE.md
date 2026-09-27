@@ -257,7 +257,7 @@ Requests are categorized into one of five explicit roles:
 2. `participant`: Associated with a team. Permitted to create and edit their team's project draft prior to cutoff. Forbidden from judging endpoints.
 3. `judge`: Associated with judging assignments. Permitted to read and write evaluations strictly for their assigned queue.
 4. `organizer`: Full event administration privileges. Permitted to view progress dashboards, access all scorecards, re-run normalization, and download CSV exports.
-5. `admin`: System-level maintenance and event configuration.
+5. `admin`: System-level administrator. Full access across all events and database state, sharing privileges with organizers.
 
 ### Why Direct curl/API Requests Cannot Bypass Restrictions
 In Verity, security is **never implemented via frontend template conditionals alone**.

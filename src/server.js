@@ -12,6 +12,7 @@ const organizerRoutes = require('./routes/organizer');
 const authRoutes = require('./routes/auth');
 const eventsRoutes = require('./routes/events');
 const teamsRoutes = require('./routes/teams');
+const toolsRoutes = require('./routes/tools');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -26,14 +27,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Authentication & Role Middleware applied globally
 app.use(authMiddleware);
 
+// Health check (before route controllers to avoid catch-all)
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Mount route controllers
 app.use('/', authRoutes);          // POST /api/auth/login, POST /api/auth/logout
 app.use('/', eventsRoutes);        // POST /api/events, POST /api/tracks, POST /api/prizes
 app.use('/', teamsRoutes);         // POST /api/teams, POST /api/teams/join
-app.use('/', galleryRoutes);       // GET /projects, GET /projects/:id
+app.use('/', galleryRoutes);       // GET /projects, GET /projects/:id, /api/ballot, /api/vote, /api/projects/:id/comments
 app.use('/', submissionRoutes);    // GET/POST /projects/new, /projects/my-submission
 app.use('/', judgingRoutes);       // GET/POST /api/judge/scores
-app.use('/', organizerRoutes);     // GET /api/export.csv, GET /api/dashboard
+app.use('/', organizerRoutes);     // GET /api/export.csv, GET /api/dashboard, /api/organizer/*
+app.use('/', toolsRoutes);         // GET /api/certificates/:id, POST /api/certificates/verify, GET /api/backup/export, GET /embed/gallery
 
 // SPA catch-all: serve index.html for client-side routes only (not API or file requests)
 app.get('*', (req, res) => {
@@ -44,11 +51,6 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Health check
-app.get('/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
-
 // Seed database with fixtures on startup
 seedDatabase(db);
 
@@ -56,3 +58,4 @@ seedDatabase(db);
 app.listen(PORT, () => {
     console.log(`Verity portal listening on http://localhost:${PORT}`);
 });
+

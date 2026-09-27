@@ -197,7 +197,7 @@ router.get('/api/organizer/audit-logs', requireOrganizer, (req, res) => {
 });
 
 // POST /api/organizer/toggle-deadline — Toggle submission cutoff for manual testing
-router.post('/api/organizer/toggle-deadline', (req, res) => {
+router.post('/api/organizer/toggle-deadline', requireOrganizer, (req, res) => {
     try {
         const event = db.prepare(`SELECT * FROM events LIMIT 1`).get();
         if (!event) return res.status(404).json({ error: 'No active event found' });
