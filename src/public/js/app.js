@@ -57,9 +57,16 @@ export function navigateTo(url) {
 async function router() {
     const root = document.getElementById('app-root');
     const path = location.pathname;
-    
+
     // Client-side Route Guard
     const user = await fetchSession();
+
+    // Force unauthenticated users to the login page
+    if (!user && path !== '/login') {
+        history.pushState(null, null, '/login');
+        return router();
+    }
+
     const roleRequirements = {
         '/submit': ['participant'],
         '/judge': ['judge', 'organizer', 'admin'],
@@ -69,16 +76,16 @@ async function router() {
 
     if (roleRequirements[path]) {
         if (!user || !roleRequirements[path].includes(user.role)) {
-            // Unauthorized or unauthenticated - redirect to gallery
+            // Unauthorized - redirect to gallery
             if (path !== '/') {
                 history.pushState(null, null, '/');
                 return router();
             }
         }
     }
-    
+
     // Find view or default to 404
-    const view = views[path] || { 
+    const view = views[path] || {
         render: async () => `
             <div class="df-card" style="border-color: var(--color-error); margin: var(--sp-12) auto; max-width: 600px;">
                 <div class="df-card__body" style="text-align: center; padding: var(--sp-8);">
@@ -89,13 +96,13 @@ async function router() {
                     </div>
                 </div>
             </div>
-        `, 
-        init: async () => {},
+        `,
+        init: async () => { },
         title: 'VERITY // 404'
     };
 
     document.title = view.title || 'VERITY // DOGFOOD 2026';
-    
+
     try {
         root.innerHTML = await view.render();
         await view.init();
@@ -138,14 +145,14 @@ export async function updateNavbar(user) {
     const badge = document.getElementById('current-role-badge');
     const loginBtn = document.getElementById('login-btn');
     const logoutBtn = document.getElementById('logout-btn');
-    
+
     // Nav Links
     const navGallery = document.getElementById('nav-gallery');
     const navSubmit = document.getElementById('nav-submit');
     const navJudge = document.getElementById('nav-judge');
     const navConsole = document.getElementById('nav-console');
     const navTools = document.getElementById('nav-tools');
-    
+
     // Reset defaults (only Gallery is visible everywhere)
     if (navGallery) navGallery.style.display = 'inline-block';
     if (navSubmit) navSubmit.style.display = 'none';
@@ -158,7 +165,7 @@ export async function updateNavbar(user) {
         badge.style.color = 'var(--brand-accent)';
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'inline-block';
-        
+
         if (user.role === 'participant') {
             if (navSubmit) navSubmit.style.display = 'inline-block';
         } else if (user.role === 'judge') {
