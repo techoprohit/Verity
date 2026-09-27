@@ -49,6 +49,8 @@ router.post('/projects/new', (req, res) => {
             return res.status(400).json({ error: 'You are not a member of any team' });
         }
 
+        const targetStatus = req.body.status === 'draft' ? 'draft' : 'submitted';
+
         // Check for existing project (update draft)
         const existing = db.prepare(`
             SELECT id FROM projects WHERE team_id = ? AND event_id = ?
@@ -58,10 +60,10 @@ router.post('/projects/new', (req, res) => {
             // Update existing draft
             db.prepare(`
                 UPDATE projects SET title = ?, summary = ?, repo_url = ?, demo_url = ?,
-                    track_id = COALESCE(?, track_id), status = 'submitted',
+                    track_id = COALESCE(?, track_id), status = ?,
                     submitted_at = COALESCE(submitted_at, ?), updated_at = ?
                 WHERE id = ?
-            `).run(title, summary || '', repo_url || '', demo_url || '', track_id, now, now, existing.id);
+            `).run(title, summary || '', repo_url || '', demo_url || '', track_id, targetStatus, now, now, existing.id);
 
             logAudit(db, {
                 actorId: req.user.id,
@@ -80,8 +82,8 @@ router.post('/projects/new', (req, res) => {
 
         db.prepare(`
             INSERT INTO projects (id, event_id, team_id, track_id, title, summary, repo_url, demo_url, status, submitted_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'submitted', ?, ?)
-        `).run(projectId, event.id, membership.team_id, track_id || 'trk_01', title, summary || '', repo_url || '', demo_url || '', now, now);
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).run(projectId, event.id, membership.team_id, track_id || 'trk_01', title, summary || '', repo_url || '', demo_url || '', targetStatus, now, now);
 
         logAudit(db, {
             actorId: req.user.id,

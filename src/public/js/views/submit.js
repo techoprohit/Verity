@@ -36,7 +36,7 @@ export async function initSubmit() {
                 <div class="df-card" style="border-color: var(--color-error)">
                     <div class="df-card__body">
                         <h3 style="color: var(--color-error)">[ HTTP 403: ACCESS DENIED ]</h3>
-                        <p>Only authenticated users with the <strong style="color: var(--brand-cyan)">PARTICIPANT</strong> role can draft or edit submissions.</p>
+                        <p>Only authenticated users with the <strong style="color: var(--brand-accent)">PARTICIPANT</strong> role can draft or edit submissions.</p>
                         <p class="text-muted" style="margin-top: var(--sp-4);">Visitor, Judge, and Organizer roles are isolated from participant draft buffers by backend policy.</p>
                         <div style="margin-top: var(--sp-6);">
                             <button class="btn-primary" id="switch-to-participant-btn">[ SWITCH TO PARTICIPANT ROLE ]</button>
@@ -95,7 +95,7 @@ export async function initSubmit() {
             <!-- Testing Override Banner -->
             <div class="df-dev-banner">
                 <div>
-                    <span class="df-tag" style="color: var(--brand-cyan)">TEST HARNESS</span>
+                    <span class="df-tag" style="color: var(--brand-accent)">TEST HARNESS</span>
                     <span class="text-small" style="margin-left: 8px;">Current State: <strong>${isLocked ? 'LOCKED (March 2026 Spec Default)' : 'OPEN FOR EDITING'}</strong></span>
                 </div>
                 <button class="btn-secondary" id="toggle-deadline-btn" style="height: 32px; font-size: 11px;">
@@ -112,7 +112,7 @@ export async function initSubmit() {
                 <div class="df-card__body" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--sp-3);">
                     <div>
                         <span class="text-muted">Team Invite Code: </span>
-                        <code style="background: var(--surface-raised); padding: 4px 8px; border: 1px solid var(--border-default); color: var(--brand-cyan);">${escapeHtml(data.team.invite_code)}</code>
+                        <code style="background: var(--surface-raised); padding: 4px 8px; border: 1px solid var(--border-default); color: var(--brand-accent);">${escapeHtml(data.team.invite_code)}</code>
                     </div>
                     <button class="btn-secondary" id="copy-invite-btn" style="height: 30px; font-size: 11px;">[ COPY INVITE CODE ]</button>
                 </div>
@@ -121,7 +121,7 @@ export async function initSubmit() {
             ${statusBanner}
 
             <!-- Project Form -->
-            <form id="submission-form" class="df-card" style="border-color: ${isLocked ? 'var(--border-default)' : 'var(--brand-cyan)'}">
+            <form id="submission-form" class="df-card" style="border-color: ${isLocked ? 'var(--border-default)' : 'var(--brand-accent)'}">
                 <div class="df-card__header">
                     <span class="df-tag">[ PROJECT SPECIFICATION ]</span>
                     <span class="df-tag">${isLocked ? 'READ-ONLY BUFFER' : 'DRAFT MODE'}</span>

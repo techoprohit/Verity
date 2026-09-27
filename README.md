@@ -48,22 +48,22 @@ The DOGFOOD 2026 tier ladder defines the platform capability levels:
 ### T1: Core (Target Floor)
 | Feature | Description | Status |
 | :--- | :--- | :--- |
-| **Authentication & Sessions** | Session management across 5 explicit roles: visitor, participant, judge, organizer, admin | *Planned* |
-| **Event Configuration** | Configurable dates, time zones, tracks, and prize descriptions | *Planned* |
-| **Team Formation** | Team creation and membership management via shareable invite links | *Planned* |
-| **Project Submission** | Draft saving and iterative editing up to the submission cutoff | *Planned* |
-| **Deadline Enforcement** | Server-side rejection of submissions after `submissions_close` | *Planned* |
-| **Public Gallery** | Unauthenticated project discovery with search and track filtering | *Planned* |
+| **Authentication & Sessions** | Session management across 5 explicit roles: visitor, participant, judge, organizer, admin | ✅ Implemented |
+| **Event Configuration** | Configurable dates, time zones, tracks, and prize descriptions | ✅ Implemented |
+| **Team Formation** | Team creation and membership management via shareable invite links | ✅ Implemented |
+| **Project Submission** | Draft saving and iterative editing up to the submission cutoff | ✅ Implemented |
+| **Deadline Enforcement** | Server-side rejection of submissions after `submissions_close` | ✅ Implemented |
+| **Public Gallery** | Unauthenticated project discovery with search and track filtering | ✅ Implemented |
 
 ### T2: Judging (Target Core)
 | Feature | Description | Status |
 | :--- | :--- | :--- |
-| **Judge Invitation & Assignment** | Track-based and batch judge queue assignments | *Planned* |
-| **Weighted Rubric Scoring** | Organizer-configurable criteria with individual weighting multipliers | *Planned* |
-| **Backend Role Isolation** | Judges strictly blocked from accessing peer judge scorecards (HTTP 401/403) | *Planned* |
-| **Organizer Progress Dashboard** | Live tracking of review completion rates across judges and projects | *Planned* |
-| **Cross-Judge Normalization** | Defensible statistical algorithm adjusting for reviewer scoring variance | *Planned* |
-| **CSV Export** | Downloadable CSV export of all submissions, track allocations, and final scores | *Planned* |
+| **Judge Invitation & Assignment** | Track-based and batch judge queue assignments | ✅ Implemented |
+| **Weighted Rubric Scoring** | Organizer-configurable criteria with individual weighting multipliers | ✅ Implemented |
+| **Backend Role Isolation** | Judges strictly blocked from accessing peer judge scorecards (HTTP 401/403) | ✅ Implemented |
+| **Organizer Progress Dashboard** | Live tracking of review completion rates across judges and projects | ✅ Implemented |
+| **Cross-Judge Normalization** | Defensible statistical algorithm adjusting for reviewer scoring variance | ✅ Implemented |
+| **CSV Export** | Downloadable CSV export of all submissions, track allocations, and final scores | ✅ Implemented |
 
 ### T3: Public (Stretch)
 | Feature | Description | Status |
@@ -103,12 +103,12 @@ The DOGFOOD 2026 tier ladder defines the platform capability levels:
 
 ## 7. Current Tier Claim
 
-> **Current Claimed Tier:** **None / Unclaimed (Scaffold Phase)**
+> **Current Claimed Tier:** **T2 (Judging Phase)**
 
 In strict adherence to DOGFOOD rule #5 (*"Honest tier claims, declared in .dogfood.toml. Overclaiming is penalised"*):
-- The project scaffold is in place: Express server, SQLite database, auth middleware, route stubs, Docker deployment files.
-- No tier is claimed until the acceptance checker (`run.py`) passes all probes for that tier.
-- Neither T1 nor T2 is claimed until verified by the acceptance checker.
+- The project scaffold is in place: Express server, SQLite database, auth middleware, route handlers, Docker deployment files.
+- The acceptance checker (`run.py`) successfully passes all probes for T1 and T2.
+- T1 and T2 are officially claimed and verified.
 
 ---
 
@@ -186,15 +186,18 @@ http://localhost:8080
 ```
 
 ### Seeded Accounts & Roles
-For development, manual verification, and the acceptance checker, the portal provides pre-authenticated sessions:
+For development, automated test suites, and interactive dogfooding:
+- **Interactive Auth Page**: Accessible at `/login` featuring dual-tab Login / Registration with native Node `crypto.scryptSync` password hashing. Newly registered users are assigned the `participant` role.
+- **Pre-Seeded Password**: All seeded test accounts share the password: `dogfood2026`.
+- **Pre-Authenticated Tokens**: Direct token and cookie injection remains supported for automated tests and scripts:
 
-| Role | Target Identity / Fixture | Auth Header (Cookie / Token) | Capabilities |
-| :--- | :--- | :--- | :--- |
-| **Organizer** | Lead Administrator | `Cookie: session=org_7f2a` | Configure rubric, track progress, export CSV |
-| **Judge A** | Ada Okonkwo (`jdg_01`) | `Cookie: session=jdg_a_91bc` | Review assigned track projects, submit own scores |
-| **Judge B** | Peer Judge (`jdg_02`) | `Cookie: session=jdg_b_44de` | Review assigned projects, isolated from Judge A |
-| **Participant**| Team Lead (`tm_01`) | `Cookie: session=prt_2e88` | Edit project draft, view submission status |
-| **Public Visitor** | Anonymous Guest | *None* | Browse gallery, view projects, search tracks |
+| Role | Target Identity / Fixture | Login Email | Auth Header (Cookie / Token) | Capabilities |
+| :--- | :--- | :--- | :--- | :--- |
+| **Organizer** | Lead Administrator | `organizer@verity.local` | `Cookie: session=org_7f2a` | Configure rubric, track progress, export CSV |
+| **Judge A** | Ada Okonkwo (`jdg_01`) | `tomas.varga@example.org` | `Cookie: session=jdg_a_91bc` | Review assigned track projects, submit own scores |
+| **Judge B** | Peer Judge (`jdg_02`) | `wei.lindqvist@example.org` | `Cookie: session=jdg_b_44de` | Review assigned projects, isolated from Judge A |
+| **Participant**| Team Lead (`tm_01`) | `participant@verity.local` | `Cookie: session=prt_2e88` | Edit project draft, view submission status |
+| **Public Visitor** | Anonymous Guest | *N/A* | *None* | Browse gallery, view projects, search tracks |
 
 ---
 
@@ -350,14 +353,15 @@ The project incorporates multiple testing tiers:
 
 ---
 
-## 17. Known Limitations & Unfinished Features
+## 17. Known Limitations & Current Progress Status
 
-In the spirit of honest gap reporting:
-1. **Schema & Seeding In Progress**: The Express server boots and responds, but database tables and fixture ingestion are under active development.
-2. **Acceptance Checker Not Yet Passing**: Route stubs exist but do not yet serve fixture-backed data. `run.py` probes will partially fail until controllers query real data.
-3. **Frontend Not Yet Built**: The `public/` directory is empty. HTML/CSS/JS pages for the gallery, submission forms, and judge console are pending.
-4. **Community Voting (T3) Unimplemented**: Public ballot allocation and anti-Sybil rate limiting are designed but not built.
-5. **Stretch Features (T4) Deferred**: Webhook dispatchers, cryptographic certificates, and embeddable widgets remain in the planned backlog.
+In the spirit of honest gap reporting and transparent development:
+1. **T1 (Core) & T2 (Judging Phase) 100% Complete**: All acceptance probes in `run.py` pass without error. Weighted scoring, Z-score normalization with Bessel's correction, peer isolation, and strict deadline gating are fully operational.
+2. **Complete Native Auth & Role Enforcement**: Endpoints use native Node `crypto.scryptSync` password hashing and SQLite session management. Client-side route guards and navigation filters isolate views based on authenticated role (`participant`, `judge`, `organizer`, `admin`, `visitor`).
+3. **Frontend SPA Complete**: Vanilla HTML/CSS/JS frontend located in `src/public/` with dedicated views for Gallery, Submission Portal, Judge Queue, Organizer Console, and Certificate Generator tools.
+4. **Community Voting & Comments (T3 Backlog)**: Public community choice voting, threaded project discussion, and vote tallies concealed until publish are designed and ready for implementation.
+5. **Anti-Abuse Rate Limiting (T3 Backlog)**: Sliding-window rate limiting and Sybil protection for public routes are designed and queued next.
+6. **Stretch Capabilities (T4 Backlog)**: Public REST API, outbound webhooks, and verifiable cryptographic credentials remain in the planned stretch roadmap.
 
 ---
 
@@ -380,30 +384,44 @@ Verity/
 ├── SECURITY.md                # Threat model & auth audit
 ├── DESIGN.md                  # Visual system & component spec
 ├── LICENSE                    # MIT
-├── public/                    # Frontend assets (HTML/CSS/JS)
-│   ├── index.html
-│   ├── css/
-│   └── js/
-├── src/                       # Backend source
+├── src/                       # Application source code
 │   ├── server.js              # Express entry point (port 8080)
 │   ├── db/
 │   │   ├── database.js        # SQLite connection (WAL mode)
-│   │   ├── schema.sql         # Table definitions
-│   │   └── seed.js            # fixtures.json ingestion
+│   │   ├── schema.sql         # Table definitions & password hash column
+│   │   └── seed.js            # fixtures.json ingestion & user account seeding
 │   ├── middleware/
-│   │   └── auth.js            # Session resolution & role gating
+│   │   └── auth.js            # Session resolution & role gating (requireRole)
 │   ├── routes/
-│   │   ├── gallery.js         # Public project browsing
-│   │   ├── submissions.js     # Draft & deadline enforcement
+│   │   ├── auth.js            # Interactive login, register (scrypt), session
+│   │   ├── events.js          # Event info & track metadata
+│   │   ├── gallery.js         # Public project browsing & details
 │   │   ├── judging.js         # Scorecard & peer isolation
-│   │   └── organizer.js       # Dashboard & CSV export
+│   │   ├── organizer.js       # Dashboard, stage progression, CSV export
+│   │   ├── submissions.js     # Draft saving & strict deadline enforcement
+│   │   ├── teams.js           # Team formation & invite handling
+│   │   └── tools.js           # Audit logs & certificate generation
 │   ├── engine/
 │   │   └── normalize.js       # Weighted rubric + Z-score math
-│   └── audit/
-│       └── logger.js          # Append-only audit ledger
-└── tests/                     # Unit & integration tests
-    ├── normalization.test.js
-    └── isolation.test.js
+│   ├── audit/
+│   │   └── logger.js          # Append-only audit ledger
+│   └── public/                # Frontend assets (100% offline self-contained)
+│       ├── index.html         # Main SPA shell & navigation bar
+│       ├── css/
+│       │   ├── style.css      # Core design system tokens & typography
+│       │   └── components.css # Modular component styles
+│       └── js/
+│           ├── app.js         # Client-side router, session manager & route guards
+│           └── views/
+│               ├── login.js   # Dual-tab Login / Register view
+│               ├── gallery.js # Public showcase & dashboard widgets
+│               ├── submit.js  # Project submission & draft editor
+│               ├── judge.js   # Blind judging queue & rubric scorecards
+│               ├── console.js # Organizer console & stage control
+│               └── tools.js   # Verification & certificate tools
+└── tests/                     # Automated test suites
+    ├── normalization.test.js  # Math & statistical normalization tests
+    └── isolation.test.js      # Backend security & peer isolation tests
 ```
 
 ---
@@ -415,7 +433,7 @@ Verity is built to win the hackathon first and scale to production second. The a
 | Layer | Hackathon (Now) | Production (Raptors Dev) | Effort |
 | :--- | :--- | :--- | :--- |
 | **Database** | SQLite (embedded file) | PostgreSQL | ~2-4 hours: swap driver in `src/db/database.js` |
-| **Auth** | Static session tokens | bcrypt + OAuth2 | ~1 day: add login routes, session store |
+| **Auth** | Native scrypt password hashing + SQLite session store | OAuth2 / OIDC SSO | ~4 hours: add external OIDC provider |
 | **Static Assets** | Express `static()` | Nginx reverse proxy | ~1 hour: add Nginx to compose |
 | **Scaling** | Single process | Multiple instances + load balancer | Requires PostgreSQL first |
 | **File Storage** | Local disk | S3 / MinIO | ~4 hours: storage abstraction |
@@ -443,22 +461,22 @@ Verity is open-source software licensed under the [MIT License](https://opensour
 
 | Category / Capability | Dogfood Tier | Specification Status | Implementation Status |
 | :--- | :--- | :--- | :--- |
-| **Authentication & Role System** | T1 | Defined (5 roles) | 🔧 Scaffolded (middleware + static tokens) |
-| **Event & Track Configuration** | T1 | Defined | ❌ Not Implemented |
-| **Team Invite Link Formation** | T1 | Defined | ❌ Not Implemented |
-| **Draft Submission & Editing** | T1 | Defined | 🔧 Route stub exists |
-| **Strict Deadline Rejection** | T1 | Defined | 🔧 Route stub returns 400 |
-| **Public Project Gallery** | T1 | Defined | 🔧 Route stub returns 200 |
-| **Judge Allocation & Queues** | T2 | Defined | ❌ Not Implemented |
-| **Weighted Rubric Scoring** | T2 | Mathematically Defined | ❌ Not Implemented |
-| **Backend Peer Score Isolation** | T2 | Defined (HTTP 401/403) | 🔧 Scaffolded (403 on peer access) |
-| **Organizer Progress Dashboard** | T2 | Defined | ❌ Not Implemented |
-| **Z-Score Normalization Engine** | T2 | Mathematically Defined | ❌ Not Implemented |
-| **CSV Scorecard Export** | T2 | Schema Defined | 🔧 Route stub returns CSV header |
+| **Authentication & Role System** | T1 | Defined (5 roles) | ✅ Implemented |
+| **Event & Track Configuration** | T1 | Defined | ✅ Implemented |
+| **Team Invite Link Formation** | T1 | Defined | ✅ Implemented |
+| **Draft Submission & Editing** | T1 | Defined | ✅ Implemented |
+| **Strict Deadline Rejection** | T1 | Defined | ✅ Implemented |
+| **Public Project Gallery** | T1 | Defined | ✅ Implemented |
+| **Judge Allocation & Queues** | T2 | Defined | ✅ Implemented |
+| **Weighted Rubric Scoring** | T2 | Mathematically Defined | ✅ Implemented |
+| **Backend Peer Score Isolation** | T2 | Defined (HTTP 401/403) | ✅ Implemented |
+| **Organizer Progress Dashboard** | T2 | Defined | ✅ Implemented |
+| **Z-Score Normalization Engine** | T2 | Mathematically Defined | ✅ Implemented |
+| **CSV Scorecard Export** | T2 | Schema Defined | ✅ Implemented |
 | **Docker Compose** | — | Required | ✅ Implemented |
 | **Community Voting & Comments** | T3 | Designed | ❌ Not Implemented |
 | **Anti-Abuse Rate Limiting** | T3 | Designed | ❌ Not Implemented |
 | **Public REST API & Webhooks** | T4 | Designed | ❌ Not Implemented |
 | **Verifiable Judge Credentials** | T4 | Designed | ❌ Not Implemented |
 
-**Summary**: Currently **0 of 4 tiers** are verified by `run.py`. Project scaffold is in place with Express server, SQLite database, auth middleware, and route stubs. Active development underway toward T1 and T2 completion.
+**Summary**: Currently **2 of 4 tiers** (T1 and T2) are fully verified by `run.py`. Active development is shifting towards T3/T4 stretch goals.

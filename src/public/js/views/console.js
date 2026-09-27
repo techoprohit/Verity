@@ -39,7 +39,7 @@ export async function initConsole() {
                 <div class="df-card" style="border-color: var(--color-error)">
                     <div class="df-card__body">
                         <h3 style="color: var(--color-error)">[ HTTP 403: ORGANIZER RESTRICTED AREA ]</h3>
-                        <p>Only users with the <strong style="color: var(--brand-cyan)">ORGANIZER</strong> or <strong style="color: var(--brand-cyan)">ADMIN</strong> role can access the event telemetry dashboard or export scoring data.</p>
+                        <p>Only users with the <strong style="color: var(--brand-accent)">ORGANIZER</strong> or <strong style="color: var(--brand-accent)">ADMIN</strong> role can access the event telemetry dashboard or export scoring data.</p>
                         <p class="text-muted" style="margin-top: var(--sp-4);">To protect judging integrity and prevent unauthorized ballot inspection, public guests, participants, and judges are blocked by backend policy.</p>
                         <div style="margin-top: var(--sp-6);">
                             <button class="btn-primary" id="switch-to-organizer-btn">[ ACT AS: ORGANIZER (org_7f2a) ]</button>
@@ -95,7 +95,7 @@ export async function initConsole() {
             <div class="df-dev-banner" style="margin-bottom: var(--sp-8);">
                 <div style="display: flex; align-items: center; gap: var(--sp-3);">
                     <span class="df-status-dot"></span>
-                    <span class="df-tag" style="color: var(--brand-cyan)">LIVE EVENT CONTROLS</span>
+                    <span class="df-tag" style="color: var(--brand-accent)">LIVE EVENT CONTROLS</span>
                 </div>
                 <div style="display: flex; gap: var(--sp-3); flex-wrap: wrap;">
                     <button class="btn-secondary" id="console-toggle-deadline-btn" style="height: 34px; font-size: 11px;">
@@ -164,7 +164,7 @@ export async function initConsole() {
                             ` : rankings.map((r, i) => `
                                 <tr>
                                     <td>
-                                        <span class="df-tag" style="${i < 3 ? 'color: var(--brand-cyan); font-weight: 800;' : ''}">
+                                        <span class="df-tag" style="${i < 3 ? 'color: var(--brand-accent); font-weight: 800;' : ''}">
                                             #${i + 1}
                                         </span>
                                     </td>
@@ -174,7 +174,7 @@ export async function initConsole() {
                                     <td><span class="df-tag">${r.reviewCount}</span></td>
                                     <td>${r.rawAverage.toFixed(2)}</td>
                                     <td>
-                                        <strong style="color: var(--brand-cyan);">${r.normalizedScore.toFixed(2)}</strong>
+                                        <strong style="color: var(--brand-accent);">${r.normalizedScore.toFixed(2)}</strong>
                                     </td>
                                     <td>
                                         <span class="df-tag" style="color: var(--color-success)">VERIFIED</span>
@@ -263,7 +263,7 @@ export async function initConsole() {
                                 <tr>
                                     <td class="text-muted" style="font-size: 11px;">${new Date(l.created_at).toISOString().replace('T', ' ').slice(0, 19)}</td>
                                     <td>
-                                        <span class="df-tag" style="${l.action.includes('UNAUTHORIZED') ? 'color: var(--color-error);' : 'color: var(--brand-cyan);'}">
+                                        <span class="df-tag" style="${l.action.includes('UNAUTHORIZED') ? 'color: var(--color-error);' : 'color: var(--brand-accent);'}">
                                             ${escapeHtml(l.action)}
                                         </span>
                                     </td>

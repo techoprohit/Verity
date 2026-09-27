@@ -9,7 +9,9 @@ const galleryRoutes = require('./routes/gallery');
 const submissionRoutes = require('./routes/submissions');
 const judgingRoutes = require('./routes/judging');
 const organizerRoutes = require('./routes/organizer');
-const toolsRoutes = require('./routes/tools');
+const authRoutes = require('./routes/auth');
+const eventsRoutes = require('./routes/events');
+const teamsRoutes = require('./routes/teams');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -24,12 +26,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Authentication & Role Middleware applied globally
 app.use(authMiddleware);
 
-// Mount route controllers (order matters: specific routes before parameterized ones)
-app.use('/', toolsRoutes);          // GET /api/certificates, GET /embed/gallery, GET /api/backup/export
-app.use('/', submissionRoutes);     // GET /projects/my-submission, POST /projects/new
-app.use('/', galleryRoutes);        // GET /projects, GET /projects/:id
-app.use('/', judgingRoutes);        // GET/POST /api/judge/scores
-app.use('/', organizerRoutes);      // GET /api/export.csv, GET /api/dashboard
+// Mount route controllers
+app.use('/', authRoutes);          // POST /api/auth/login, POST /api/auth/logout
+app.use('/', eventsRoutes);        // POST /api/events, POST /api/tracks, POST /api/prizes
+app.use('/', teamsRoutes);         // POST /api/teams, POST /api/teams/join
+app.use('/', galleryRoutes);       // GET /projects, GET /projects/:id
+app.use('/', submissionRoutes);    // GET/POST /projects/new, /projects/my-submission
+app.use('/', judgingRoutes);       // GET/POST /api/judge/scores
+app.use('/', organizerRoutes);     // GET /api/export.csv, GET /api/dashboard
 
 // SPA catch-all: serve index.html for client-side routes only (not API or file requests)
 app.get('*', (req, res) => {

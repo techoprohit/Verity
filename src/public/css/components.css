@@ -21,13 +21,33 @@
     margin-bottom: 2px;
     color: var(--text-primary);
 }
+/* Forms & Inputs */
+.df-ordinal {
+    font-family: var(--font-display);
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-4);
+    margin-right: var(--sp-4);
+}
+.df-ordinal::after {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 1px;
+    background-color: var(--border-default);
+}
 
 /* Forms & Inputs */
 .df-input {
     background-color: var(--surface-base);
     border: 1px solid var(--border-default);
     color: var(--text-primary);
-    font-family: var(--font-body);
+    font-family: var(--font-mono);
     font-size: 14px;
     padding: var(--sp-2) var(--sp-4);
     height: 42px;
@@ -37,9 +57,9 @@
     box-sizing: border-box;
 }
 .df-input:focus {
-    outline: none;
-    border-color: var(--brand-lime);
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+    outline: 2px solid var(--brand-accent);
+    outline-offset: 2px;
+    border-color: var(--brand-accent);
 }
 .df-input:disabled {
     background-color: var(--surface-raised);
@@ -100,7 +120,7 @@ textarea.df-input {
     background-color: var(--surface-base);
     border: 1px solid var(--border-default);
     color: var(--text-secondary);
-    font-family: var(--font-body);
+    font-family: var(--font-mono);
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -111,14 +131,14 @@ textarea.df-input {
     white-space: nowrap;
 }
 .df-pill:hover {
-    border-color: var(--brand-lime);
+    border-color: var(--color-success);
     color: var(--text-primary);
     background-color: var(--surface-hover);
 }
 .df-pill.active {
     background-color: rgba(34, 197, 94, 0.15);
-    border-color: var(--brand-lime);
-    color: var(--brand-lime);
+    border-color: var(--color-success);
+    color: var(--color-success);
     font-weight: 700;
 }
 
@@ -150,7 +170,7 @@ textarea.df-input {
     cursor: pointer;
 }
 .df-card.interactive:hover {
-    border-color: var(--brand-lime);
+    border-color: var(--color-success);
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
@@ -189,7 +209,7 @@ textarea.df-input {
     background-color: rgba(255, 255, 255, 0.01);
 }
 .df-link {
-    color: var(--brand-lime);
+    color: var(--color-success);
     text-decoration: none;
     font-weight: 700;
     font-size: 12px;
@@ -272,7 +292,7 @@ textarea.df-input {
     background-color: var(--surface-raised);
     border: 1px solid var(--border-default);
     color: var(--text-primary);
-    font-family: var(--font-body);
+    font-family: var(--font-mono);
     font-size: 15px;
     font-weight: 700;
     cursor: pointer;
@@ -280,12 +300,12 @@ textarea.df-input {
     transition: all 120ms ease;
 }
 .df-stepper-btn:hover {
-    border-color: var(--brand-lime);
-    color: var(--brand-lime);
+    border-color: var(--color-success);
+    color: var(--color-success);
 }
 .df-stepper-btn.selected {
-    background-color: var(--brand-lime);
-    border-color: var(--brand-lime);
+    background-color: var(--color-success);
+    border-color: var(--color-success);
     color: #0B0F17;
     box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
 }
@@ -322,7 +342,7 @@ textarea.df-input {
     font-family: var(--font-display);
     font-size: 36px;
     font-weight: 800;
-    color: var(--brand-lime);
+    color: var(--color-success);
     line-height: 1.1;
     margin: 4px 0;
 }
@@ -338,7 +358,7 @@ textarea.df-input {
 .df-table {
     width: 100%;
     border-collapse: collapse;
-    font-family: var(--font-body);
+    font-family: var(--font-mono);
     font-size: 14px;
     text-align: left;
 }
@@ -376,7 +396,7 @@ textarea.df-input {
 }
 .df-progress-fill {
     height: 100%;
-    background-color: var(--brand-lime);
+    background-color: var(--color-success);
     transition: width 200ms ease;
 }
 

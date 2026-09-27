@@ -3,6 +3,8 @@
  * High-performance project discovery, track filtering, and detail modal.
  */
 
+import { fetchSession } from '../app.js';
+
 export async function renderGallery() {
     return `
         <div class="df-header-block">
@@ -17,6 +19,8 @@ export async function renderGallery() {
                 <span class="df-tag" id="gallery-count">[ 0 ENTRIES ]</span>
             </div>
         </div>
+        
+        <div id="dashboard-widget-container"></div>
         
         <div class="df-filter-bar">
             <div class="df-filter-top">
@@ -51,6 +55,65 @@ export async function initGallery() {
     const countTag = document.getElementById('gallery-count');
     const statusTag = document.getElementById('filter-status-tag');
     const modalContainer = document.getElementById('project-modal-container');
+    const dashboardWidget = document.getElementById('dashboard-widget-container');
+    
+    // Check session for dashboard
+    try {
+        const user = await fetchSession();
+        if (dashboardWidget) {
+            if (!user) {
+                dashboardWidget.innerHTML = `
+                    <div class="df-card" style="margin-bottom: var(--sp-6); background: var(--surface-raised); border-color: var(--brand-accent);">
+                        <div class="df-card__body" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3 style="color: var(--brand-accent)">Welcome to Dogfood 2026</h3>
+                                <p class="text-muted">Please login to participate or judge.</p>
+                            </div>
+                            <a href="/login" class="btn-primary" data-link>Login</a>
+                        </div>
+                    </div>
+                `;
+            } else if (user.role === 'participant') {
+                dashboardWidget.innerHTML = `
+                    <div class="df-card" style="margin-bottom: var(--sp-6); background: var(--surface-raised); border-color: var(--brand-accent);">
+                        <div class="df-card__body" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <span class="df-tag" style="color: var(--brand-accent);">PARTICIPANT DASHBOARD</span>
+                                <h3 style="margin-top: 4px;">Manage Your Submission</h3>
+                            </div>
+                            <a href="/submit" class="btn-primary" data-link>Go to Submission Portal</a>
+                        </div>
+                    </div>
+                `;
+            } else if (user.role === 'judge') {
+                dashboardWidget.innerHTML = `
+                    <div class="df-card" style="margin-bottom: var(--sp-6); background: var(--surface-raised); border-color: var(--brand-accent);">
+                        <div class="df-card__body" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <span class="df-tag" style="color: var(--brand-accent);">JUDGE DASHBOARD</span>
+                                <h3 style="margin-top: 4px;">Active Evaluation Phase</h3>
+                            </div>
+                            <a href="/judge" class="btn-primary" data-link>Enter Judge Portal</a>
+                        </div>
+                    </div>
+                `;
+            } else if (user.role === 'organizer' || user.role === 'admin') {
+                dashboardWidget.innerHTML = `
+                    <div class="df-card" style="margin-bottom: var(--sp-6); background: var(--surface-raised); border-color: var(--brand-accent);">
+                        <div class="df-card__body" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <span class="df-tag" style="color: var(--brand-accent);">ORGANIZER DASHBOARD</span>
+                                <h3 style="margin-top: 4px;">Hackathon Management</h3>
+                            </div>
+                            <a href="/console" class="btn-primary" data-link>Go to Console</a>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    } catch (e) {
+        console.error('Failed to load dashboard widget', e);
+    }
     
     let allProjects = [];
     let currentTrack = 'all';
@@ -152,7 +215,7 @@ export async function initGallery() {
                 <div class="df-modal">
                     <div class="df-modal__header">
                         <div>
-                            <span class="df-tag" style="color: var(--brand-cyan)">[ PROJECT DOSSIER // ${p.id} ]</span>
+                            <span class="df-tag" style="color: var(--brand-accent)">[ PROJECT DOSSIER // ${p.id} ]</span>
                             <h3 style="margin-top: var(--sp-2);">${escapeHtml(p.title)}</h3>
                         </div>
                         <button class="btn-secondary" id="modal-close-btn" style="height: 30px; padding: 0 10px;">[ X ]</button>
